@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="de-CH">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#3C3C3B">
+<meta name="apple-mobile-web-app-title" content="xABCDE">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<title>xABCDE Anästhesie – digitale Antrittskontrolle</title>
+<style>
+  :root { --anth:#3C3C3B; --red:#E1001A; --mint:#0E8571; --mintbg:#E4F5F1; --row:#F3F3F4; --sub:#646464; --line:#E3E3E3; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: Arial, "Liberation Sans", sans-serif; color:#1E1E1E; background:#EDEDED; }
+  .card { max-width: 820px; margin: 18px auto; background:#fff; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,.12); }
+  header { background: var(--anth); color:#fff; padding: 18px 22px 14px; border-radius: 12px 12px 0 0; }
+  header h1 { margin:0; font-size: 34px; letter-spacing: .5px; }
+  header .sub { color:#DADADA; font-size: 14px; margin-top: 4px; }
+  header .motto { color:#BEBEBE; font-size: 12px; font-style: italic; margin-top: 6px; }
+  .bar { position: sticky; top: 0; z-index: 5; background:#fff; padding: 10px 22px; border-bottom: 1px solid var(--line); font-size: 13px; }
+  .row1, .row2 { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+  .row2 { margin-top: 8px; }
+  .bar select, .bar button { font: inherit; min-height: 34px; padding: 6px 12px; border-radius: 7px; border:1px solid #BDBDBD; background:#fff; cursor:pointer; }
+  .bar button.primary { background: var(--red); color:#fff; border-color: var(--red); font-weight: bold; }
+  .bar button.mint { background: var(--mint); color:#fff; border-color: var(--mint); font-weight: bold; }
+  .bar .meta { color: var(--sub); }
+  .progress { flex:1; min-width: 140px; height: 9px; background:#E6E6E6; border-radius: 5px; overflow:hidden; }
+  .progress > div { height:100%; width:0; background: var(--mint); transition: width .2s; }
+  .sections { padding: 10px 14px 4px; }
+  .section { display:flex; gap:14px; background: var(--row); border-radius: 9px; padding: 12px 14px; margin: 8px 0; }
+  .section.x { background: var(--mintbg); }
+  .section.complete { box-shadow: inset 4px 0 0 var(--mint); }
+  .badge { flex: 0 0 44px; height:44px; border-radius: 9px; color:#fff; font-weight:bold; font-size: 24px; display:flex; align-items:center; justify-content:center; }
+  .content { flex:1; min-width: 0; }
+  .head { display:flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+  .head h2 { margin:0; font-size: 17px; color: var(--anth); }
+  .head .tag { font-size: 12px; color: var(--sub); font-style: italic; }
+  .head .count { font-size: 12px; color: var(--sub); margin-left: 8px; font-weight: normal; }
+  ul { list-style:none; margin: 8px 0 0; padding:0; display:grid; grid-template-columns: 1fr 1fr; gap: 6px 18px; }
+  li { border-radius: 6px; padding: 2px 4px; }
+  li label { display:flex; gap:9px; align-items:flex-start; cursor:pointer; font-size: 14px; min-height: 30px; }
+  li input[type=checkbox] { margin-top: 1px; width:18px; height:18px; flex: 0 0 18px; accent-color: var(--anth); }
+  li .hint { display:block; font-size: 11.5px; color: var(--sub); line-height: 1.35; margin-top: 1px; }
+  li.done .txt { text-decoration: line-through; color: #8A8A8A; }
+  li.missing { outline: 2px solid var(--red); background: #FFF1F2; }
+  li.choice { font-size: 14px; }
+  li.choice .opts { display:inline-flex; gap: 12px; margin-left: 8px; flex-wrap: wrap; }
+  li.choice .opt { cursor:pointer; display:inline-flex; align-items:center; gap:4px; min-height: 28px; }
+  li.choice .opt input { width:17px; height:17px; margin:0; accent-color: var(--anth); }
+  li.choice.done .txt { text-decoration:none; color: inherit; }
+  .link { margin-left: 6px; font-size: 12px; color: var(--red); background:none; border:none; cursor:pointer; text-decoration: underline; padding:0; }
+  .calc { margin-top: 10px; background:#fff; border: 1px solid var(--line); border-radius: 8px; padding: 9px 12px 10px; }
+  .calc-head { display:flex; justify-content:space-between; align-items:baseline; gap: 4px 12px; flex-wrap: wrap; font-size: 13.5px; color: var(--anth); }
+  .calc-head span { font-size: 11.5px; color: var(--sub); }
+  .calc-row { display:flex; flex-wrap: wrap; align-items:flex-end; gap: 6px 8px; margin-top: 8px; }
+  .cf { display:flex; flex-direction:column; gap: 2px; font-size: 11.5px; color: var(--sub); }
+  .cf .inp { display:flex; align-items:center; gap: 4px; font-size: 13px; color: var(--anth); }
+  .cf input, .cf select { font: inherit; font-size: 14px; min-height: 34px; padding: 5px 7px; border: 1px solid #BDBDBD; border-radius: 6px; background:#fff; color:#1E1E1E; }
+  .cf input { width: 86px; }
+  .cf input.bad { border-color: var(--red); background:#FFF1F2; }
+  .op { font-size: 17px; color: var(--sub); padding: 0 1px 7px; }
+  .res { font-size: 14px; color: var(--anth); padding-bottom: 8px; }
+  .res b { color: var(--mint); }
+  .res .warn { color: var(--red); font-weight: bold; }
+  .mode { font-size: 11.5px; color: var(--sub); font-style: italic; padding-bottom: 9px; }
+  .hbout { margin-top: 8px; padding: 6px 10px; border-left: 3px solid var(--mint); background: var(--mintbg); border-radius: 0 6px 6px 0; font-size: 13.5px; color: var(--anth); line-height: 1.5; }
+  .hbout b { color: var(--mint); }
+  .hbout .warn, .hbout b.warn { color: var(--red); font-weight: bold; }
+  .hbout:empty { display:none; }
+  .calc-note { margin-top: 6px; font-size: 11px; color: var(--sub); }
+  .note { width: 100%; margin-top: 8px; font: inherit; font-size: 13px; padding: 7px 9px; border: 1px solid #CFCFCF; border-radius: 6px; background: #fff; }
+  #overlay { display:none; position: fixed; inset: 0; background: rgba(30,30,30,.45); z-index: 20; padding: 24px 12px; overflow:auto; }
+  #overlay.open { display:block; }
+  #dopes { max-width: 760px; margin: 0 auto; background:#fff; border-radius: 12px; overflow:hidden; border: 2px solid var(--red); }
+  .dhead { background: var(--anth); color:#fff; padding: 9px 12px; display:flex; justify-content:space-between; align-items:center; gap: 10px; }
+  .first { background: var(--red); color:#fff; font-weight:bold; text-align:center; padding: 8px; font-size: 15px; }
+  #handoffbox, #historybox { display:none; margin: 10px 14px; border: 2px solid var(--anth); border-radius: 10px; overflow:hidden; }
+  #handoffbox.open, #historybox.open { display:block; }
+  #handofftext { width:100%; border:0; padding: 10px 12px; font: 13px/1.45 Arial, sans-serif; resize: vertical; }
+  #history { list-style:none; margin:0; padding: 6px 12px 10px; display:block; }
+  #history li { padding: 6px 0; border-bottom: 1px solid var(--line); font-size: 13px; }
+  #history li:last-child { border-bottom: 0; }
+  #history .ok { color: var(--mint); font-weight: bold; }
+  #history .no { color: var(--red); font-weight: bold; }
+  footer { background: var(--red); color:#fff; text-align:center; padding: 10px; border-radius: 0 0 12px 12px; }
+  footer b { display:block; font-size: 15px; }
+  footer span { font-size: 12px; color:#FFE2E5; }
+  .credit { text-align:center; font-size: 11px; color: var(--sub); padding: 6px 10px 10px; }
+  .privacy { text-align:center; font-size: 11px; color: var(--anth); padding: 0 10px 8px; }
+  #toast { position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%); background: var(--anth); color:#fff; padding: 9px 14px; border-radius: 8px; font-size: 13px; opacity: 0; transition: opacity .25s; pointer-events:none; z-index: 30; }
+  #toast.show { opacity: .95; }
+  #printmeta { display:none; }
+  .nojs { margin: 10px 14px 0; padding: 9px 12px; border-radius: 8px; background: #FFF4E5; color: #6B4A00; font-size: 13px; }
+  @media (max-width: 600px) {
+    body { background:#fff; padding-bottom: calc(62px + env(safe-area-inset-bottom)); }
+    .card { margin: 0; border-radius: 0; box-shadow: none; }
+    header { border-radius: 0; padding: 14px 14px 12px; }
+    header h1 { font-size: 26px; }
+    footer { border-radius: 0; }
+    .bar { padding: 8px 10px; }
+    .row1 { gap: 6px 8px; }
+    .row1 .lbl { display:none; }
+    .bar select { max-width: 64vw; }
+    .progress { order: 3; flex: 0 0 100%; height: 6px; }
+    .row2 { position: fixed; left: 0; right: 0; bottom: 0; margin: 0; background:#fff; border-top: 1px solid var(--line); box-shadow: 0 -2px 8px rgba(0,0,0,.08);
+            padding: 8px 10px calc(8px + env(safe-area-inset-bottom)); flex-wrap: nowrap; overflow-x: auto; gap: 6px; scrollbar-width: none; }
+    .row2::-webkit-scrollbar { display:none; }
+    .bar button { flex: 0 0 auto; min-height: 40px; padding: 6px 11px; }
+    #started { display:none; }
+    #toast { bottom: calc(76px + env(safe-area-inset-bottom)); }
+    ul { grid-template-columns: 1fr; }
+    .sections { padding: 6px 8px 2px; }
+    .section { gap: 10px; padding: 10px; }
+    .badge { flex: 0 0 34px; height: 34px; font-size: 19px; border-radius: 8px; }
+    .calc { margin-left: -44px; padding: 9px 10px 10px; }
+    .cf input { width: 76px; }
+    #handoffbox, #historybox { margin: 10px 8px; }
+  }
+  @media print {
+    body { background:#fff; } .card { box-shadow:none; margin:0; max-width:none; }
+    .bar, .note:placeholder-shown, #handoffbox, #overlay, #toast, .link, .calc.empty { display:none !important; }
+    #printmeta { display:block; padding: 6px 22px; font-size: 12px; color: var(--sub); }
+    .section { break-inside: avoid; }
+  }
+</style>
+<noscript><style>
+  .bar, .note, .link, .count { display:none !important; }
+  #overlay { display:block; position:static; background:none; padding: 0 0 14px; overflow:visible; }
+</style></noscript>
+</head>
+<body>
+<div class="card">
+  <header>
+    <h1 id="title">xABCDE</h1>
+    <div class="sub" id="subtitle">Intraoperative Antrittskontrolle in der Anästhesie</div>
+    <div class="motto" id="motto">Wenn die Übergabe endet, beginnt die Übernahme</div>
+  </header>
+  <div class="bar">
+    <div class="row1">
+      <label><span class="lbl">Anlass</span> <select id="reason" aria-label="Anlass der Kontrolle"><option>Übernahme (Teamwechsel)</option><option>Lagewechsel / Umlagerung</option><option>Situationswechsel</option><option>Reassessment (regelmässig)</option></select></label>
+      <div class="progress" aria-label="Fortschritt"><div id="pbar"></div></div>
+      <span id="ptext"></span>
+    </div>
+    <div class="row2">
+      <button id="close" class="mint" title="Kontrolle mit Uhrzeit im Verlauf speichern und die nächste beginnen">Kontrolle abschliessen</button>
+      <button id="handoff" class="primary">Übergabetext</button>
+      <button id="export">JSON exportieren</button>
+      <button id="print">Drucken</button>
+      <button id="reset" title="Alle Einträge und den Verlauf löschen">Neu beginnen</button>
+      <span class="meta" id="started"></span>
+    </div>
+  </div>
+  <noscript><div class="nojs">Leseansicht ohne JavaScript, zum Beispiel in der Dateivorschau auf dem iPhone. Fortschritt, Rechner, Verlauf und Übergabetext funktionieren nur im Browser.</div></noscript>
+  <div id="printmeta"></div>
+  <div id="handoffbox"><div class="dhead"><b>Übergabetext</b><span><button id="copy" class="link" style="color:#fff">kopieren</button> <button id="closehand" class="link" style="color:#fff">schliessen</button></span></div><textarea id="handofftext" rows="11" readonly></textarea></div>
+  <div class="sections" id="sections"><div class="section x" id="sec-x"><div class="badge" style="background:#0E8571">x</div><div class="content"><div class="head"><h2>Lagebeurteilung<span class="count" id="cnt-x"></span></h2><span class="tag">Xtra · Überblick</span></div><ul><li id="li-x1"><label><input type="checkbox" data-id="x1"> <span><span class="txt">Gesamteindruck</span> <span class="hint">Mit frischem Blick über das Abdecktuch auf Patientin oder Patient und Operationsfeld</span></span></label></li><li id="li-x2" class="choice"><span class="txt"><b>Lage</b></span> <span class="opts"><label class="opt"><input type="radio" name="x2" value="stabil" data-id="x2"> stabil</label><label class="opt"><input type="radio" name="x2" value="instabil" data-id="x2"> instabil</label></span> <span class="hint">Auch bei instabiler Lage A bis E der Reihe nach, akuten Handlungsbedarf im zugehörigen Buchstaben sofort umsetzen</span></li><li id="li-x3" class="choice"><span class="txt"><b>Handlungsbedarf</b></span> <span class="opts"><label class="opt"><input type="radio" name="x3" value="ja" data-id="x3"> ja</label><label class="opt"><input type="radio" name="x3" value="nein" data-id="x3"> nein</label></span> <span class="hint">Jetzt oder demnächst, z. B. tiefe Relaxierung, Blutdruckziel, bevorstehende Umlagerung · bei stabiler Lage ohne Handlungsbedarf Rundgang um den Operationstisch</span></li><li id="li-x4"><label><input type="checkbox" data-id="x4"> <span><span class="txt">OP-Phase & nächster Schritt</span> <span class="hint">Stand des Eingriffs und nächster Schritt, z. B. Wundverschluss oder Ausleitung · geplantes Vorgehen bekannt, etwa bei schwierigem Atemweg</span></span></label></li></ul><input class="note" data-sec="x" placeholder="Bemerkung (optional, ohne Personendaten)" aria-label="Bemerkung Lagebeurteilung"></div></div><div class="section" id="sec-A"><div class="badge" style="background:#E1001A">A</div><div class="content"><div class="head"><h2>Airway<span class="count" id="cnt-A"></span></h2><span class="tag">Kopf-Check</span></div><ul><li id="li-A1"><label><input type="checkbox" data-id="A1"> <span><span class="txt">Atemwegssicherung</span> <span class="hint">Tubus oder Larynxmaske: Lage, beim Tubus Tiefe an der Zahnreihe, Fixierung, Cuffdruck im Zielbereich</span></span></label></li><li id="li-A2"><label><input type="checkbox" data-id="A2"> <span><span class="txt">Schläuche frei</span> <span class="hint">Beatmungsschläuche, Filter und CO₂-Messleitung intakt, nicht abgeknickt oder diskonnektiert</span></span></label></li><li id="li-A3"><label><input type="checkbox" data-id="A3"> <span><span class="txt">Augenschutz</span> <span class="hint">Augen geschlossen und druckfrei, besonders bei langer Dauer sowie in Bauch-, Seiten- und Kopftieflage</span></span></label></li><li id="li-A4"><label><input type="checkbox" data-id="A4"> <span><span class="txt">Kopflagerung</span> <span class="hint">Kopf druckfrei und neutral gelagert, Ohren nicht abgeknickt, kein Druck durch Tubus oder Schläuche im Gesicht</span></span></label></li></ul><input class="note" data-sec="A" placeholder="Bemerkung (optional, ohne Personendaten)" aria-label="Bemerkung Airway"></div></div><div class="section" id="sec-B"><div class="badge" style="background:#E1001A">B</div><div class="content"><div class="head"><h2>Breathing<span class="count" id="cnt-B"></span></h2><span class="tag">Beatmung</span></div><ul><li id="li-B1"><label><input type="checkbox" data-id="B1"> <span><span class="txt">SpO₂ & Kapnographie</span> <span class="hint">Sättigung mit guter Pulskurve, Kapnographiekurve vorhanden und typisch, Werte plausibel</span></span></label></li><li id="li-B2"><label><input type="checkbox" data-id="B2"> <span><span class="txt">Beatmungsparameter</span> <button class="link" data-calcjump="vent">Rechner</button> <span class="hint">Modus, Tidalvolumen nach Idealgewicht, Frequenz, PEEP und FiO₂ passend zu Eingriff, Lagerung und OP-Phase, besonders nach Pneumoperitoneum oder Lagewechsel</span></span></label></li><li id="li-B3"><label><input type="checkbox" data-id="B3"> <span><span class="txt">Auskultation</span> <span class="hint">Seitengleiche Belüftung · Nebengeräusche wie Giemen oder Brummen (obstruktiv), Rasselgeräusche, Stridor (besonders bei Larynxmaske)</span></span></label></li><li id="li-B4"><label><input type="checkbox" data-id="B4"> <span><span class="txt">Alarmgrenzen & Trends</span> <span class="hint">Alarmgrenzen für Atemwegsdruck, Minutenvolumen und endtidales CO₂ · Trendkurven für Compliance und Sauerstoffaufnahme, Druck-Volumen-Schleife</span></span></label></li><li id="li-B5"><label><input type="checkbox" data-id="B5"> <span><span class="txt">akut: DOPES · HANDS</span> <button class="link" data-open="DOPES">öffnen</button> <span class="hint">Nur bei plötzlicher Beatmungsverschlechterung: Ursache suchen und parallel handeln</span></span></label></li></ul><input class="note" data-sec="B" placeholder="Bemerkung (optional, ohne Personendaten)" aria-label="Bemerkung Breathing"></div></div><div class="section" id="sec-C"><div class="badge" style="background:#E1001A">C</div><div class="content"><div class="head"><h2>Circulation<span class="count" id="cnt-C"></span></h2><span class="tag">Kreislauf & Monitoring</span></div><ul><li id="li-C1"><label><input type="checkbox" data-id="C1"> <span><span class="txt">Hämodynamik & Zielwerte</span> <span class="hint">Blutdruckziel klar und eingehalten, Herzfrequenz und Rhythmus, Katecholaminbedarf · Werte plausibel, Druckaufnehmer auf Referenzhöhe (besonders nach Lagewechsel), Manschette frei</span></span></label></li><li id="li-C2"><label><input type="checkbox" data-id="C2"> <span><span class="txt">Blutverlust & Spülmenge</span> <button class="link" data-calcjump="blood">Rechner</button> <span class="hint">Bisherigen Blutverlust abzüglich Spülmenge bilanzieren, zu erwartenden Blutverlust einschätzen · Hb-Ausgangswert und Verlauf (BGA), Verfügbarkeit von Blutprodukten</span></span></label></li><li id="li-C3"><label><input type="checkbox" data-id="C3"> <span><span class="txt">Zugänge</span> <span class="hint">Venös und arteriell: Anzahl, Lage, Grösse in Gauge und Funktion, passend zu Eingriff und Volumenbedarf · unter der Abdeckung nicht diskonnektiert, abgeknickt oder paravasal</span></span></label></li><li id="li-C4"><label><input type="checkbox" data-id="C4"> <span><span class="txt">Volumenstatus & Diurese</span> <span class="hint">Bilanz aus Infusionen und Verlusten, Zeichen von Volumenmangel · Urinausscheidung mit Menge und Farbe, Katheter durchgängig</span></span></label></li><li id="li-C5"><label><input type="checkbox" data-id="C5"> <span><span class="txt">Alarmgrenzen</span> <span class="hint">Für Blutdruck, Herzfrequenz und SpO₂ patientenindividuell und eingriffsbezogen eingestellt, Alarme nicht stummgeschaltet</span></span></label></li><li id="li-C6"><label><input type="checkbox" data-id="C6"> <span><span class="txt">Narkosetiefe (BIS)</span> <span class="hint">Wert und Verlauf im Zielbereich, Signalqualität gut · besonders bei TIVA mit Relaxierung</span></span></label></li></ul><input class="note" data-sec="C" placeholder="Bemerkung (optional, ohne Personendaten)" aria-label="Bemerkung Circulation"></div></div><div class="section" id="sec-D"><div class="badge" style="background:#E1001A">D</div><div class="content"><div class="head"><h2>Drugs<span class="count" id="cnt-D"></span></h2><span class="tag">Narkose & Medikation</span></div><ul><li id="li-D1" class="choice"><span class="txt"><b>Narkose</b></span> <span class="opts"><label class="opt"><input type="radio" name="D1" value="TIVA" data-id="D1"> TIVA</label><label class="opt"><input type="radio" name="D1" value="volatil" data-id="D1"> volatil</label></span> <span class="hint">Laufende Substanzen für Hypnose und Analgesie, allfällige Regionalanästhesie oder Periduralkatheter</span></li><li id="li-D2"><label><input type="checkbox" data-id="D2"> <span><span class="txt">Zielkonzentration</span> <span class="hint">Passend zu Eingriff und OP-Phase · TIVA: Zielwerte für Hypnotikum und Opioid, Patientendaten im TCI-Modell korrekt · volatil: endtidale Konzentration (MAC), richtiges Alter im Narkosegerät</span></span></label></li><li id="li-D3"><label><input type="checkbox" data-id="D3"> <span><span class="txt">Laufrate & Flow</span> <span class="hint">Perfusoren: Rate korrekt, Leitung bis zum Zugang durchgängig · volatil: Frischgasflow, Verdampfer gefüllt</span></span></label></li><li id="li-D4" class="choice"><span class="txt"><b>Relaxierung</b></span> <span class="opts"><label class="opt"><input type="radio" name="D4" value="ja" data-id="D4"> ja</label><label class="opt"><input type="radio" name="D4" value="nein" data-id="D4"> nein</label></span> <span class="hint">Bei ja: quantitatives neuromuskuläres Monitoring (TOF), Zeitpunkt der letzten Gabe, Nachdosierung und Antagonisierung planen</span></li><li id="li-D5"><label><input type="checkbox" data-id="D5"> <span><span class="txt">Reserve & Nachschub</span> <span class="hint">Reserve- und Notfallmedikation griffbereit, Nachschub für laufende Perfusoren vorbereitet, besonders vor Lagewechsel oder Ausleitung</span></span></label></li><li id="li-D6"><label><input type="checkbox" data-id="D6"> <span><span class="txt">Antibiotikaprophylaxe</span> <span class="hint">Zeitpunkt der letzten Gabe, Wiederholungsdosis je nach Dauer und Blutverlust</span></span></label></li></ul><input class="note" data-sec="D" placeholder="Bemerkung (optional, ohne Personendaten)" aria-label="Bemerkung Drugs"></div></div><div class="section" id="sec-E"><div class="badge" style="background:#E1001A">E</div><div class="content"><div class="head"><h2>Environment<span class="count" id="cnt-E"></span></h2><span class="tag">Everything else</span></div><ul><li id="li-E1"><label><input type="checkbox" data-id="E1"> <span><span class="txt">Lagerung & Druckstellen</span> <span class="hint">Von Kopf bis Fuss: Auflagepunkte gepolstert, Arme ohne Überstreckung, keine Kabel oder Schläuche unter dem Körper · nach jedem Lagewechsel erneut, besonders in Bauchlage</span></span></label></li><li id="li-E2"><label><input type="checkbox" data-id="E2"> <span><span class="txt">Wärmemanagement</span> <span class="hint">Temperatur gemessen, aktive Wärmung läuft, Infusionen bei grossen Mengen gewärmt</span></span></label></li><li id="li-E3"><label><input type="checkbox" data-id="E3"> <span><span class="txt">Arbeitsplatz</span> <span class="hint">Zugänge und Geräte frei erreichbar, Leitungen ohne Zug, Knick und Stolperfallen · Beatmungsbeutel, Absaugung und Material griffbereit</span></span></label></li><li id="li-E4"><label><input type="checkbox" data-id="E4"> <span><span class="txt">Verlegungsziel</span> <span class="hint">Aufwachraum, Intensivstation oder Bettenstation geklärt, bei Bedarf Platz reserviert</span></span></label></li><li id="li-E5"><label><input type="checkbox" data-id="E5"> <span><span class="txt">Dokumentation</span> <span class="hint">Zeitpunkt, Anlass und Befund dokumentiert, bei Übernahme auch der Personalwechsel</span></span></label></li></ul><input class="note" data-sec="E" placeholder="Bemerkung (optional, ohne Personendaten)" aria-label="Bemerkung Environment"></div></div></div>
+  <div id="historybox"><div class="dhead"><b>Verlauf der Kontrollen</b><span id="histcount"></span></div><ul id="history"></ul></div>
+  <div class="credit" id="credit">Konzept: Noah Reichle · Diplomarbeit NDS Anästhesiepflege, Universitätsspital Basel, 2026 · Konzept aus einer Diplomarbeit, nicht klinisch validiert. Ersetzt keine fachliche Beurteilung.</div>
+  <div class="privacy" id="privacy">Keine Personendaten wie Name oder Geburtsdatum in die Bemerkungen eingeben.</div>
+  <footer><b>Reassessment</b><span id="triggers">nach jeder Übernahme · nach Lage- und Situationswechseln · nach jeder Massnahme · in regelmässigen Abständen</span></footer>
+</div>
+<div id="overlay" role="dialog" aria-modal="true" aria-label="DOPES · HANDS"><div id="dopes"><div class="dhead"><b>DOPES · HANDS – Akutes Beatmungsproblem</b><button class="link" style="color:#fff" data-close="1">schliessen</button></div><div class="first">Zuerst: an den Beutel, FiO₂ 1,0</div><div class="sections"><div class="section" id="sec-DOPES-D"><div class="badge" style="background:#E1001A">D</div><div class="content"><div class="head"><h2>Dislokation<span class="count" id="cnt-DOPES-D"></span></h2><span class="tag">Ursache suchen</span></div><ul><li id="li-DOPES-D1"><label><input type="checkbox" data-id="DOPES-D1"> <span><span class="txt">Tubus ösophageal, endobronchial oder herausgerutscht?</span> </span></label></li></ul></div></div><div class="section" id="sec-DOPES-O"><div class="badge" style="background:#E1001A">O</div><div class="content"><div class="head"><h2>Obstruktion<span class="count" id="cnt-DOPES-O"></span></h2><span class="tag">Ursache suchen</span></div><ul><li id="li-DOPES-O1"><label><input type="checkbox" data-id="DOPES-O1"> <span><span class="txt">Sekret, Blut, Knick in Tubus oder System?</span> </span></label></li></ul></div></div><div class="section" id="sec-DOPES-P"><div class="badge" style="background:#E1001A">P</div><div class="content"><div class="head"><h2>Patient<span class="count" id="cnt-DOPES-P"></span></h2><span class="tag">Ursache suchen</span></div><ul><li id="li-DOPES-P1"><label><input type="checkbox" data-id="DOPES-P1"> <span><span class="txt">Pneumothorax, Kreislaufversagen, Pressen?</span> </span></label></li></ul></div></div><div class="section" id="sec-DOPES-E"><div class="badge" style="background:#E1001A">E</div><div class="content"><div class="head"><h2>Equipment<span class="count" id="cnt-DOPES-E"></span></h2><span class="tag">Ursache suchen</span></div><ul><li id="li-DOPES-E1"><label><input type="checkbox" data-id="DOPES-E1"> <span><span class="txt">Gerät, Schläuche, O₂-Versorgung, Einstellungen?</span> </span></label></li></ul></div></div><div class="section" id="sec-DOPES-S"><div class="badge" style="background:#E1001A">S</div><div class="content"><div class="head"><h2>Stomach / Sedation<span class="count" id="cnt-DOPES-S"></span></h2><span class="tag">Ursache suchen</span></div><ul><li id="li-DOPES-S1"><label><input type="checkbox" data-id="DOPES-S1"> <span><span class="txt">Magen überbläht? Narkose zu flach?</span> </span></label></li></ul></div></div><div class="section" id="sec-HANDS-H"><div class="badge" style="background:#0E8571">H</div><div class="content"><div class="head"><h2>Hand<span class="count" id="cnt-HANDS-H"></span></h2><span class="tag">parallel handeln</span></div><ul><li id="li-HANDS-H1"><label><input type="checkbox" data-id="HANDS-H1"> <span><span class="txt">Beutel mit FiO₂ 1,0: sehen, hören, fühlen</span> </span></label></li></ul></div></div><div class="section" id="sec-HANDS-A"><div class="badge" style="background:#0E8571">A</div><div class="content"><div class="head"><h2>Absaugen<span class="count" id="cnt-HANDS-A"></span></h2><span class="tag">parallel handeln</span></div><ul><li id="li-HANDS-A1"><label><input type="checkbox" data-id="HANDS-A1"> <span><span class="txt">Tubus durchgängig? Ggf. Magensonde</span> </span></label></li></ul></div></div><div class="section" id="sec-HANDS-N"><div class="badge" style="background:#0E8571">N</div><div class="content"><div class="head"><h2>Neueinstellung<span class="count" id="cnt-HANDS-N"></span></h2><span class="tag">parallel handeln</span></div><ul><li id="li-HANDS-N1"><label><input type="checkbox" data-id="HANDS-N1"> <span><span class="txt">Einstellungen prüfen, Air-Trapping (iPEEP)?</span> </span></label></li></ul></div></div><div class="section" id="sec-HANDS-D"><div class="badge" style="background:#0E8571">D</div><div class="content"><div class="head"><h2>Diagnostik<span class="count" id="cnt-HANDS-D"></span></h2><span class="tag">parallel handeln</span></div><ul><li id="li-HANDS-D1"><label><input type="checkbox" data-id="HANDS-D1"> <span><span class="txt">Thoraxsonographie, BGA, ggf. Röntgen</span> </span></label></li></ul></div></div><div class="section" id="sec-HANDS-S"><div class="badge" style="background:#0E8571">S</div><div class="content"><div class="head"><h2>Sedierung<span class="count" id="cnt-HANDS-S"></span></h2><span class="tag">parallel handeln</span></div><ul><li id="li-HANDS-S1"><label><input type="checkbox" data-id="HANDS-S1"> <span><span class="txt">Bei Pressen: Sedierungsbolus</span> </span></label></li></ul></div></div></div><div class="credit">Noah Reichle · inhaltlich nach Fandler & Gotthardt (2018) und Notfallguru (2026)</div></div></div>
+<div id="toast" role="status"></div>
+<script>
+const DATA = {"xabcde": {"schema": "xabcde-checklist", "version": "2.2", "language": "de-CH", "title": "xABCDE", "subtitle": "Intraoperative Antrittskontrolle in der Anästhesie", "motto": "Wenn die Übergabe endet, beginnt die Übernahme", "author": "Noah Reichle", "source": "Diplomarbeit NDS Anästhesiepflege, Universitätsspital Basel, 2026", "disclaimer": "Konzept aus einer Diplomarbeit, nicht klinisch validiert. Ersetzt keine fachliche Beurteilung.", "privacy": "Keine Personendaten wie Name oder Geburtsdatum in die Bemerkungen eingeben.", "reasons": ["Übernahme (Teamwechsel)", "Lagewechsel / Umlagerung", "Situationswechsel", "Reassessment (regelmässig)"], "calculators": {"blood": {"title": "Blutvolumen & Blutverlust", "item": "C2", "note": "Schätzung mit Richtwerten, bei Adipositas eher zu hoch", "hbNote": "Hb und tolerierbarer Blutverlust nach Gross (1983), Annahme: verlorenes Volumen ersetzt · Hb mit BGA kontrollieren", "source": "Gross, J. B. (1983). Estimating allowable blood loss: Corrected for dilution. Anesthesiology, 58(3), 277–280", "factors": [{"label": "Mann", "mlPerKg": 70}, {"label": "Frau", "mlPerKg": 65}, {"label": "Kind", "mlPerKg": 75}, {"label": "Säugling", "mlPerKg": 80}, {"label": "Neugeborenes", "mlPerKg": 85}]}, "vent": {"title": "Tidalvolumen nach Idealgewicht", "item": "B2", "note": "Erwachsene, Idealgewicht aus Grösse und Geschlecht", "sexes": ["Mann", "Frau"], "mlPerKg": [6, 8], "startNote": "Start nach Young et al. (2019): 6–8 ml/kg Idealgewicht und PEEP 5 cmH₂O, PEEP danach individuell · Idealgewicht nach ARDS Network (2000)", "source": "Acute Respiratory Distress Syndrome Network (2000). N Engl J Med, 342(18), 1301–1308 · Young, C. C. et al. (2019). Br J Anaesth, 123(6), 898–913"}}, "sections": [{"id": "x", "letter": "x", "title": "Lagebeurteilung", "subtitle": "Xtra · Überblick", "color": "#0E8571", "items": [{"id": "x1", "label": "Gesamteindruck", "hint": "Mit frischem Blick über das Abdecktuch auf Patientin oder Patient und Operationsfeld"}, {"id": "x2", "label": "Lage", "options": ["stabil", "instabil"], "hint": "Auch bei instabiler Lage A bis E der Reihe nach, akuten Handlungsbedarf im zugehörigen Buchstaben sofort umsetzen"}, {"id": "x3", "label": "Handlungsbedarf", "options": ["ja", "nein"], "hint": "Jetzt oder demnächst, z. B. tiefe Relaxierung, Blutdruckziel, bevorstehende Umlagerung · bei stabiler Lage ohne Handlungsbedarf Rundgang um den Operationstisch"}, {"id": "x4", "label": "OP-Phase & nächster Schritt", "hint": "Stand des Eingriffs und nächster Schritt, z. B. Wundverschluss oder Ausleitung · geplantes Vorgehen bekannt, etwa bei schwierigem Atemweg"}]}, {"id": "A", "letter": "A", "title": "Airway", "subtitle": "Kopf-Check", "color": "#E1001A", "items": [{"id": "A1", "label": "Atemwegssicherung", "hint": "Tubus oder Larynxmaske: Lage, beim Tubus Tiefe an der Zahnreihe, Fixierung, Cuffdruck im Zielbereich"}, {"id": "A2", "label": "Schläuche frei", "hint": "Beatmungsschläuche, Filter und CO₂-Messleitung intakt, nicht abgeknickt oder diskonnektiert"}, {"id": "A3", "label": "Augenschutz", "hint": "Augen geschlossen und druckfrei, besonders bei langer Dauer sowie in Bauch-, Seiten- und Kopftieflage"}, {"id": "A4", "label": "Kopflagerung", "hint": "Kopf druckfrei und neutral gelagert, Ohren nicht abgeknickt, kein Druck durch Tubus oder Schläuche im Gesicht"}]}, {"id": "B", "letter": "B", "title": "Breathing", "subtitle": "Beatmung", "color": "#E1001A", "items": [{"id": "B1", "label": "SpO₂ & Kapnographie", "hint": "Sättigung mit guter Pulskurve, Kapnographiekurve vorhanden und typisch, Werte plausibel"}, {"id": "B2", "label": "Beatmungsparameter", "hint": "Modus, Tidalvolumen nach Idealgewicht, Frequenz, PEEP und FiO₂ passend zu Eingriff, Lagerung und OP-Phase, besonders nach Pneumoperitoneum oder Lagewechsel", "calc": "vent"}, {"id": "B3", "label": "Auskultation", "hint": "Seitengleiche Belüftung · Nebengeräusche wie Giemen oder Brummen (obstruktiv), Rasselgeräusche, Stridor (besonders bei Larynxmaske)"}, {"id": "B4", "label": "Alarmgrenzen & Trends", "hint": "Alarmgrenzen für Atemwegsdruck, Minutenvolumen und endtidales CO₂ · Trendkurven für Compliance und Sauerstoffaufnahme, Druck-Volumen-Schleife"}, {"id": "B5", "label": "akut: DOPES · HANDS", "hint": "Nur bei plötzlicher Beatmungsverschlechterung: Ursache suchen und parallel handeln", "link": "DOPES", "optional": true}]}, {"id": "C", "letter": "C", "title": "Circulation", "subtitle": "Kreislauf & Monitoring", "color": "#E1001A", "items": [{"id": "C1", "label": "Hämodynamik & Zielwerte", "hint": "Blutdruckziel klar und eingehalten, Herzfrequenz und Rhythmus, Katecholaminbedarf · Werte plausibel, Druckaufnehmer auf Referenzhöhe (besonders nach Lagewechsel), Manschette frei"}, {"id": "C2", "label": "Blutverlust & Spülmenge", "hint": "Bisherigen Blutverlust abzüglich Spülmenge bilanzieren, zu erwartenden Blutverlust einschätzen · Hb-Ausgangswert und Verlauf (BGA), Verfügbarkeit von Blutprodukten", "calc": "blood"}, {"id": "C3", "label": "Zugänge", "hint": "Venös und arteriell: Anzahl, Lage, Grösse in Gauge und Funktion, passend zu Eingriff und Volumenbedarf · unter der Abdeckung nicht diskonnektiert, abgeknickt oder paravasal"}, {"id": "C4", "label": "Volumenstatus & Diurese", "hint": "Bilanz aus Infusionen und Verlusten, Zeichen von Volumenmangel · Urinausscheidung mit Menge und Farbe, Katheter durchgängig"}, {"id": "C5", "label": "Alarmgrenzen", "hint": "Für Blutdruck, Herzfrequenz und SpO₂ patientenindividuell und eingriffsbezogen eingestellt, Alarme nicht stummgeschaltet"}, {"id": "C6", "label": "Narkosetiefe (BIS)", "hint": "Wert und Verlauf im Zielbereich, Signalqualität gut · besonders bei TIVA mit Relaxierung"}]}, {"id": "D", "letter": "D", "title": "Drugs", "subtitle": "Narkose & Medikation", "color": "#E1001A", "items": [{"id": "D1", "label": "Narkose", "options": ["TIVA", "volatil"], "hint": "Laufende Substanzen für Hypnose und Analgesie, allfällige Regionalanästhesie oder Periduralkatheter"}, {"id": "D2", "label": "Zielkonzentration", "hint": "Passend zu Eingriff und OP-Phase · TIVA: Zielwerte für Hypnotikum und Opioid, Patientendaten im TCI-Modell korrekt · volatil: endtidale Konzentration (MAC), richtiges Alter im Narkosegerät"}, {"id": "D3", "label": "Laufrate & Flow", "hint": "Perfusoren: Rate korrekt, Leitung bis zum Zugang durchgängig · volatil: Frischgasflow, Verdampfer gefüllt"}, {"id": "D4", "label": "Relaxierung", "options": ["ja", "nein"], "hint": "Bei ja: quantitatives neuromuskuläres Monitoring (TOF), Zeitpunkt der letzten Gabe, Nachdosierung und Antagonisierung planen"}, {"id": "D5", "label": "Reserve & Nachschub", "hint": "Reserve- und Notfallmedikation griffbereit, Nachschub für laufende Perfusoren vorbereitet, besonders vor Lagewechsel oder Ausleitung"}, {"id": "D6", "label": "Antibiotikaprophylaxe", "hint": "Zeitpunkt der letzten Gabe, Wiederholungsdosis je nach Dauer und Blutverlust"}]}, {"id": "E", "letter": "E", "title": "Environment", "subtitle": "Everything else", "color": "#E1001A", "items": [{"id": "E1", "label": "Lagerung & Druckstellen", "hint": "Von Kopf bis Fuss: Auflagepunkte gepolstert, Arme ohne Überstreckung, keine Kabel oder Schläuche unter dem Körper · nach jedem Lagewechsel erneut, besonders in Bauchlage"}, {"id": "E2", "label": "Wärmemanagement", "hint": "Temperatur gemessen, aktive Wärmung läuft, Infusionen bei grossen Mengen gewärmt"}, {"id": "E3", "label": "Arbeitsplatz", "hint": "Zugänge und Geräte frei erreichbar, Leitungen ohne Zug, Knick und Stolperfallen · Beatmungsbeutel, Absaugung und Material griffbereit"}, {"id": "E4", "label": "Verlegungsziel", "hint": "Aufwachraum, Intensivstation oder Bettenstation geklärt, bei Bedarf Platz reserviert"}, {"id": "E5", "label": "Dokumentation", "hint": "Zeitpunkt, Anlass und Befund dokumentiert, bei Übernahme auch der Personalwechsel"}]}], "reassessment": {"title": "Reassessment", "triggers": ["nach jeder Übernahme", "nach Lage- und Situationswechseln", "nach jeder Massnahme", "in regelmässigen Abständen"]}}, "linked": {"DOPES": {"schema": "xabcde-checklist", "version": "2.2", "language": "de-CH", "title": "DOPES · HANDS", "subtitle": "Akutes Beatmungsproblem", "first": "Zuerst: an den Beutel, FiO₂ 1,0", "author": "Noah Reichle", "source": "inhaltlich nach Fandler & Gotthardt (2018) und Notfallguru (2026)", "sections": [{"id": "DOPES-D", "letter": "D", "title": "Dislokation", "subtitle": "Ursache suchen", "color": "#E1001A", "items": [{"id": "DOPES-D1", "label": "Tubus ösophageal, endobronchial oder herausgerutscht?"}]}, {"id": "DOPES-O", "letter": "O", "title": "Obstruktion", "subtitle": "Ursache suchen", "color": "#E1001A", "items": [{"id": "DOPES-O1", "label": "Sekret, Blut, Knick in Tubus oder System?"}]}, {"id": "DOPES-P", "letter": "P", "title": "Patient", "subtitle": "Ursache suchen", "color": "#E1001A", "items": [{"id": "DOPES-P1", "label": "Pneumothorax, Kreislaufversagen, Pressen?"}]}, {"id": "DOPES-E", "letter": "E", "title": "Equipment", "subtitle": "Ursache suchen", "color": "#E1001A", "items": [{"id": "DOPES-E1", "label": "Gerät, Schläuche, O₂-Versorgung, Einstellungen?"}]}, {"id": "DOPES-S", "letter": "S", "title": "Stomach / Sedation", "subtitle": "Ursache suchen", "color": "#E1001A", "items": [{"id": "DOPES-S1", "label": "Magen überbläht? Narkose zu flach?"}]}, {"id": "HANDS-H", "letter": "H", "title": "Hand", "subtitle": "parallel handeln", "color": "#0E8571", "items": [{"id": "HANDS-H1", "label": "Beutel mit FiO₂ 1,0: sehen, hören, fühlen"}]}, {"id": "HANDS-A", "letter": "A", "title": "Absaugen", "subtitle": "parallel handeln", "color": "#0E8571", "items": [{"id": "HANDS-A1", "label": "Tubus durchgängig? Ggf. Magensonde"}]}, {"id": "HANDS-N", "letter": "N", "title": "Neueinstellung", "subtitle": "parallel handeln", "color": "#0E8571", "items": [{"id": "HANDS-N1", "label": "Einstellungen prüfen, Air-Trapping (iPEEP)?"}]}, {"id": "HANDS-D", "letter": "D", "title": "Diagnostik", "subtitle": "parallel handeln", "color": "#0E8571", "items": [{"id": "HANDS-D1", "label": "Thoraxsonographie, BGA, ggf. Röntgen"}]}, {"id": "HANDS-S", "letter": "S", "title": "Sedierung", "subtitle": "parallel handeln", "color": "#0E8571", "items": [{"id": "HANDS-S1", "label": "Bei Pressen: Sedierungsbolus"}]}]}}};
+const CL = DATA.xabcde, DOPES = DATA.linked.DOPES;
+
+const fmtDateTime = d => new Date(d).toLocaleString('de-CH', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+const fmtTime = d => new Date(d).toLocaleTimeString('de-CH', { hour: '2-digit', minute: '2-digit' });
+const fmtNum = n => String(Math.round(n * 10) / 10).replace('.', ',');
+const fmtMl = n => String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, '’') + ' ml';
+const BLOOD_KEYS = ['weightKg', 'mlPerKg', 'volumeMl', 'suctionMl', 'irrigationMl', 'swabsMl', 'expectedMl', 'hbStart', 'hbMin'];
+const VENT_KEYS = ['heightCm', 'sex'];
+const VT_RANGE = [6, 8];
+
+/** Liest Zahlen auch mit Komma, Apostroph oder Leerzeichen, z. B. „72,5“ oder „1’500“. Leer ergibt null. */
+function toNumber(v) {
+  if (v === '' || v === null || v === undefined) return null;
+  const t = String(v).trim().replace(/[’'\s]/g, '').replace(',', '.');
+  return t === '' ? null : Number(t);
+}
+
+/** Legt ein leeres Protokoll an. Bemerkungen und Blutwerte einer vorherigen Kontrolle können übernommen werden. */
+function createProtocol(checklists = [CL, DOPES], reason = 'Übernahme (Teamwechsel)', notes = {}, blood = {}, vent = {}) {
+  const list = Array.isArray(checklists) ? checklists : [checklists];
+  const items = {};
+  for (const c of list) for (const s of c.sections) for (const i of s.items)
+    items[i.id] = i.options ? { checked: false, value: null, at: null } : { checked: false, at: null };
+  return { checklist: list[0].title, version: list[0].version, reason,
+           startedAt: new Date().toISOString(), completedAt: null, items, sectionNotes: { ...notes }, blood: { ...blood }, vent: { ...vent } };
+}
+
+/** Hakt einen Prüfpunkt ab oder hebt den Haken auf (mit Zeitstempel). */
+function setChecked(protocol, itemId, checked = true) {
+  if (!(itemId in protocol.items)) throw new Error('Unbekannter Prüfpunkt: ' + itemId);
+  const prev = protocol.items[itemId];
+  protocol.items[itemId] = { ...prev, checked, at: checked ? new Date().toISOString() : null };
+  if (!checked && 'value' in prev) protocol.items[itemId].value = null;
+  return protocol;
+}
+
+/** Setzt bei Auswahlpunkten (z. B. Lage stabil/instabil, Narkose TIVA/volatil) den gewählten Wert. */
+function setValue(protocol, itemId, value, checklist = CL) {
+  const item = checklist.sections.flatMap(s => s.items).find(i => i.id === itemId);
+  if (!item || !item.options) throw new Error('Kein Auswahlpunkt: ' + itemId);
+  if (!item.options.includes(value)) throw new Error('Ungültiger Wert für ' + itemId + ': ' + value);
+  protocol.items[itemId] = { checked: true, value, at: new Date().toISOString() };
+  return protocol;
+}
+
+/** Hält eine kurze Bemerkung pro Buchstabe fest (z. B. „MAP-Ziel > 65 mmHg“). */
+function setNote(protocol, sectionId, text) {
+  protocol.sectionNotes = protocol.sectionNotes || {};
+  protocol.sectionNotes[sectionId] = String(text || '').trim();
+  return protocol;
+}
+
+/** Schätzt das Blutvolumen in ml aus Körpergewicht (kg) und Richtwert (ml/kg), gerundet auf 10 ml. */
+function estimateBloodVolume(weightKg, mlPerKg = 70) {
+  const w = Number(weightKg), f = Number(mlPerKg);
+  if (!(w > 0) || !(f > 0)) return null;
+  return Math.round(w * f / 10) * 10;
+}
+
+/** Speichert Angaben zu Blutvolumen und Blutverlust, z. B. { weightKg: 72, suctionMl: 800, irrigationMl: 400 }.
+ *  Gewicht und Richtwert berechnen das Blutvolumen. Ein direkt eingegebenes Blutvolumen gilt, bis Gewicht oder Richtwert geändert werden. */
+function setBlood(protocol, values = {}) {
+  const b = { ...(protocol.blood || {}) };
+  for (const [k, v] of Object.entries(values)) {
+    if (!BLOOD_KEYS.includes(k)) throw new Error('Unbekanntes Feld: ' + k);
+    const n = toNumber(v);
+    if (n !== null && !(Number.isFinite(n) && n >= 0)) throw new Error('Ungültiger Wert für ' + k + ': ' + v);
+    b[k] = n;
+  }
+  if ('volumeMl' in values) b.volumeManual = b.volumeMl !== null;
+  else if (('weightKg' in values || 'mlPerKg' in values) && b.weightKg) b.volumeManual = false;
+  if (!b.volumeManual) b.volumeMl = estimateBloodVolume(b.weightKg, b.mlPerKg ?? 70);
+  protocol.blood = b;
+  return protocol;
+}
+
+/** Hb in g/l nach einem Blutverlust bei ersetztem Volumen, nach Gross (1983): Hb0 × (2 − r) / (2 + r) mit r = Blutverlust / Blutvolumen. */
+function hbAfterLoss(hbStart, lossMl, volumeMl) {
+  if (!(hbStart > 0) || !(volumeMl > 0) || typeof lossMl !== 'number' || lossMl < 0) return null;
+  const r = Math.min(lossMl / volumeMl, 2);
+  return Math.round(hbStart * (2 - r) / (2 + r));
+}
+
+/** Tolerierbarer Blutverlust in ml bis zur Hb-Grenze nach Gross (1983): Blutvolumen × (Hb0 − Hb-Grenze) / Mittelwert beider Hb, gerundet auf 10 ml. */
+function tolerableBloodLoss(volumeMl, hbStart, hbMin) {
+  if (!(volumeMl > 0) || !(hbStart > 0) || !(hbMin > 0)) return null;
+  if (hbMin >= hbStart) return 0;
+  return Math.round(volumeMl * (hbStart - hbMin) / ((hbStart + hbMin) / 2) / 10) * 10;
+}
+
+/** Fasst Blutvolumen, bisherigen Blutverlust (Sauger minus Spülung plus Tücher) und erwarteten Blutverlust zusammen, mit Anteil am Blutvolumen in Prozent. */
+function bloodSummary(protocol) {
+  const b = protocol.blood || {}, has = k => typeof b[k] === 'number';
+  const volumeMl = has('volumeMl') && b.volumeMl > 0 ? b.volumeMl : null;
+  const pct = ml => ml !== null && volumeMl ? Math.round(100 * ml / volumeMl) : null;
+  const raw = has('suctionMl') || has('swabsMl') ? (b.suctionMl || 0) - (b.irrigationMl || 0) + (b.swabsMl || 0) : null;
+  const lossMl = raw === null ? null : Math.max(0, raw);
+  const expectedMl = has('expectedMl') ? b.expectedMl : null;
+  const hbStart = has('hbStart') && b.hbStart > 0 ? b.hbStart : null, hbMin = has('hbMin') && b.hbMin > 0 ? b.hbMin : null;
+  const expectedExceeded = expectedMl !== null && lossMl !== null && lossMl > expectedMl;
+  const hbNow = lossMl !== null ? hbAfterLoss(hbStart, lossMl, volumeMl) : null;
+  const hbAfterExpected = expectedMl !== null && !expectedExceeded ? hbAfterLoss(hbStart, expectedMl, volumeMl) : null;
+  const tolerableMl = tolerableBloodLoss(volumeMl, hbStart, hbMin);
+  const remainingMl = tolerableMl === null ? null : Math.round((tolerableMl - (lossMl || 0)) / 10) * 10;
+  return { volumeMl, fromWeight: volumeMl !== null && !b.volumeManual, weightKg: has('weightKg') ? b.weightKg : null, mlPerKg: b.mlPerKg ?? 70,
+           suctionMl: has('suctionMl') ? b.suctionMl : null, irrigationMl: has('irrigationMl') ? b.irrigationMl : null, swabsMl: has('swabsMl') ? b.swabsMl : null,
+           lossMl, lossPct: pct(lossMl), implausible: raw !== null && raw < 0, expectedMl, expectedPct: pct(expectedMl), expectedExceeded,
+           hbStart, hbMin, hbNow, hbAfterExpected, tolerableMl, remainingMl, limitReached: remainingMl !== null && remainingMl <= 0,
+           expectedBelowLimit: hbAfterExpected !== null && hbMin !== null && hbAfterExpected < hbMin,
+           hbUnitCheck: (hbStart !== null && hbStart < 30) || (hbMin !== null && hbMin < 30) };
+}
+
+/** Kurzer Text zu Blutvolumen und Blutverlust für Übergabetext und Ausdruck. */
+function bloodText(protocol) {
+  const s = bloodSummary(protocol), parts = [];
+  if (s.volumeMl) parts.push(`Blutvolumen ca. ${fmtMl(s.volumeMl)}` + (s.fromWeight ? ` (${fmtNum(s.weightKg)} kg × ${s.mlPerKg} ml/kg)` : ''));
+  if (s.hbStart) parts.push(`Hb Ausgang ${fmtNum(s.hbStart)} g/l` + (s.hbMin ? `, Grenze ${fmtNum(s.hbMin)} g/l` : '') +
+                             (s.tolerableMl !== null ? `, tolerierbarer Blutverlust ca. ${fmtMl(s.tolerableMl)}` : '') + (s.hbUnitCheck ? ', Einheit g/l prüfen' : ''));
+  if (s.lossMl !== null) {
+    const calc = `Sauger ${fmtNum(s.suctionMl ?? 0)}` + (s.irrigationMl !== null ? ` − Spülung ${fmtNum(s.irrigationMl)}` : '') +
+                 (s.swabsMl !== null ? ` + Tücher ${fmtNum(s.swabsMl)}` : '') + ' ml';
+    parts.push(`Blutverlust netto ${fmtMl(s.lossMl)}` + (s.lossPct !== null ? ` = ${s.lossPct} %` : '') + ` (${calc})` + (s.implausible ? ', Werte prüfen' : '') +
+               (s.hbNow !== null ? `, Hb rechnerisch ca. ${s.hbNow} g/l` : '') +
+               (s.remainingMl !== null ? (s.limitReached ? ', Hb-Grenze rechnerisch erreicht' : `, noch tolerierbar ca. ${fmtMl(s.remainingMl)}`) : ''));
+  }
+  if (s.expectedMl !== null) parts.push(`erwarteter Blutverlust ${fmtMl(s.expectedMl)}` + (s.expectedPct !== null ? ` = ${s.expectedPct} %` : '') +
+                                        (s.expectedExceeded ? ', bereits überschritten' : '') +
+                                        (s.hbAfterExpected !== null ? `, Hb danach ca. ${s.hbAfterExpected} g/l${s.expectedBelowLimit ? ' (unter der Grenze)' : ''}` : ''));
+  return parts.join(' · ');
+}
+
+/** Idealgewicht (predicted body weight) in kg nach ARDS Network (2000): Mann 50, Frau 45,5 plus 0,91 × (Grösse in cm − 152,4). Für Erwachsene. */
+function predictedBodyWeight(heightCm, sex) {
+  const h = Number(heightCm);
+  if (!(h >= 120 && h <= 230) || !['Mann', 'Frau'].includes(sex)) return null;
+  return Math.round(((sex === 'Mann' ? 50 : 45.5) + 0.91 * (h - 152.4)) * 10) / 10;
+}
+
+/** Speichert Grösse (cm) und Geschlecht (Mann oder Frau). */
+function setVent(protocol, values = {}) {
+  const v = { ...(protocol.vent || {}) };
+  for (const [k, x] of Object.entries(values)) {
+    if (!VENT_KEYS.includes(k)) throw new Error('Unbekanntes Feld: ' + k);
+    if (k === 'sex') {
+      if (x && !['Mann', 'Frau'].includes(x)) throw new Error('Ungültiger Wert für sex: ' + x);
+      v.sex = x || null; continue;
+    }
+    const n = toNumber(x);
+    if (n !== null && !(Number.isFinite(n) && n >= 0)) throw new Error('Ungültiger Wert für ' + k + ': ' + x);
+    v[k] = n;
+  }
+  protocol.vent = v;
+  return protocol;
+}
+
+/** Idealgewicht und Tidalvolumen 6–8 ml/kg Idealgewicht (Young et al., 2019). */
+function ventSummary(protocol) {
+  const v = protocol.vent || {}, r10 = x => Math.round(x / 10) * 10;
+  const heightCm = typeof v.heightCm === 'number' && v.heightCm > 0 ? v.heightCm : null;
+  const pbwKg = predictedBodyWeight(heightCm, v.sex);
+  return { heightCm, sex: v.sex || null, pbwKg, vtMinMl: pbwKg ? r10(VT_RANGE[0] * pbwKg) : null, vtMaxMl: pbwKg ? r10(VT_RANGE[1] * pbwKg) : null,
+           heightCheck: heightCm !== null && (heightCm < 120 || heightCm > 230) };
+}
+
+/** Kurzer Text zum Tidalvolumen für den Übergabetext. */
+function ventText(protocol) {
+  const s = ventSummary(protocol), parts = [];
+  if (s.pbwKg) parts.push(`Idealgewicht ca. ${fmtNum(s.pbwKg)} kg (${fmtNum(s.heightCm)} cm, ${s.sex}), Tidalvolumen ${VT_RANGE[0]}–${VT_RANGE[1]} ml/kg = ${s.vtMinMl}–${fmtMl(s.vtMaxMl)}`);
+  else if (s.heightCheck) parts.push(`Grösse ${fmtNum(s.heightCm)} cm prüfen`);
+  return parts.join(' · ');
+}
+
+/** Fortschritt gesamt und pro Abschnitt. Optionale Punkte (DOPES · HANDS) zählen nicht. */
+function progress(protocol, checklist = CL) {
+  const result = { total: { done: 0, all: 0 }, sections: {} };
+  for (const section of checklist.sections) {
+    const req = section.items.filter(i => !i.optional);
+    const s = { done: 0, all: req.length };
+    for (const item of req) if (protocol.items[item.id] && protocol.items[item.id].checked) s.done++;
+    result.sections[section.id] = s;
+    result.total.done += s.done; result.total.all += s.all;
+  }
+  return result;
+}
+
+/** Liste der noch offenen Pflichtpunkte, z. B. [{ section: 'A', id: 'A3', label: 'Augenschutz' }]. */
+function openItems(protocol, checklist = CL) {
+  const out = [];
+  for (const s of checklist.sections) for (const i of s.items)
+    if (!i.optional && !(protocol.items[i.id] && protocol.items[i.id].checked)) out.push({ section: s.letter, id: i.id, label: i.label });
+  return out;
+}
+
+/** Schliesst eine Kontrolle ab und liefert den Eintrag für den Verlauf. */
+function closeCheck(protocol, checklist = CL) {
+  const p = progress(protocol, checklist);
+  const choice = {};
+  for (const s of checklist.sections) for (const i of s.items)
+    if (i.options && protocol.items[i.id] && protocol.items[i.id].value) choice[i.label] = protocol.items[i.id].value;
+  return { reason: protocol.reason, startedAt: protocol.startedAt, closedAt: new Date().toISOString(),
+           done: p.total.done, all: p.total.all, choice, blood: bloodSummary(protocol), vent: ventSummary(protocol),
+           open: openItems(protocol, checklist).map(o => o.section + ' ' + o.label) };
+}
+
+/** Erstellt den lesbaren Übergabe- bzw. Dokumentationstext, optional mit Verlauf der Kontrollen. */
+function toHandoffText(protocol, checklist = CL, history = []) {
+  const lines = [`Antrittskontrolle xABCDE · ${protocol.reason} · ${fmtDateTime(protocol.startedAt)}`];
+  let done = 0, all = 0;
+  for (const s of checklist.sections) {
+    const ok = [], open = [];
+    for (const i of s.items) {
+      const st = protocol.items[i.id] || {};
+      const label = i.options ? `${i.label}: ${st.value ?? '–'}` : i.label;
+      if (i.optional) { if (st.checked) ok.push(label); continue; }
+      (st.checked ? ok : open).push(label);
+      all++; if (st.checked) done++;
+    }
+    let line = `${s.letter} ${s.title}: ${ok.length ? ok.join(', ') : '–'}`;
+    if (open.length) line += ` | offen: ${open.join(', ')}`;
+    const calc = s.items.some(i => i.calc === 'blood') ? bloodText(protocol) : s.items.some(i => i.calc === 'vent') ? ventText(protocol) : '';
+    if (calc) line += ` | ${calc}`;
+    const note = (protocol.sectionNotes || {})[s.id];
+    if (note) line += ` | Bemerkung: ${note}`;
+    lines.push(line);
+  }
+  lines.push(`Geprüft: ${done}/${all}${done === all ? ' (vollständig)' : ''}`);
+  if (history.length) {
+    lines.push('', 'Verlauf der Kontrollen:');
+    for (const h of history)
+      lines.push(`${fmtTime(h.closedAt)} ${h.reason}: ${h.done}/${h.all}${h.open.length ? ' · offen: ' + h.open.join(', ') : ' · vollständig'}` +
+                 (h.blood && h.blood.lossMl !== null ? ` · Blutverlust ${fmtMl(h.blood.lossMl)}${h.blood.lossPct !== null ? ' = ' + h.blood.lossPct + ' %' : ''}${h.blood.hbNow ? ', Hb ca. ' + h.blood.hbNow + ' g/l' : ''}` : ''));
+  }
+  return lines.join('\n');
+}
+
+let protocol, history = [];
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+function sectionHTML(s, withNote) {
+  const cls = s.id === 'x' ? 'section x' : 'section';
+  const items = s.items.map(i => i.options ? `
+    <li id="li-${i.id}" class="choice"><span class="txt"><b>${i.label}</b></span>
+      <span class="opts">${i.options.map(o => `<label class="opt"><input type="radio" name="${i.id}" value="${o}" data-id="${i.id}"> ${o}</label>`).join('')}</span>
+      ${i.hint ? `<span class="hint">${i.hint}</span>` : ''}</li>` : `
+    <li id="li-${i.id}"><label>
+      <input type="checkbox" data-id="${i.id}">
+      <span><span class="txt">${i.label}</span>${i.link ? ` <button class="link" data-open="${i.link}">öffnen</button>` : ''}${i.calc ? ` <button class="link" data-calcjump="${i.calc}">Rechner</button>` : ''}
+      ${i.hint ? `<span class="hint">${i.hint}</span>` : ''}</span>
+    </label></li>`).join('');
+  return `<div class="${cls}" id="sec-${s.id}">
+    <div class="badge" style="background:${s.color}">${s.letter}</div>
+    <div class="content">
+      <div class="head"><h2>${s.title}<span class="count" id="cnt-${s.id}"></span></h2><span class="tag">${s.subtitle}</span></div>
+      <ul>${items}</ul>
+      ${CL.calculators && s.items.some(i => i.calc === 'vent') ? ventCalcHTML(CL.calculators.vent) : ''}
+      ${CL.calculators && s.items.some(i => i.calc === 'blood') ? calcHTML(CL.calculators.blood) : ''}
+      ${withNote ? `<input class="note" data-sec="${s.id}" placeholder="Bemerkung (optional, ohne Personendaten)" aria-label="Bemerkung ${s.title}">` : ''}
+    </div></div>`;
+}
+
+const op = t => `<span class="op" aria-hidden="true">${t}</span>`;
+const field = (kind, key, label, unit, title) => `<label class="cf"${title ? ` title="${title}"` : ''}><span>${label}</span><span class="inp"><input type="text" inputmode="decimal" autocomplete="off" data-${kind}="${key}" aria-label="${label} in ${unit}"> ${unit}</span></label>`;
+const nb = s => String(s).replace(/(\d) (ml|g\/l|%|kg|cm)/g, '$1\u00A0$2');
+
+function ventCalcHTML(c) {
+  return `<div class="calc empty" id="calc-vent">
+    <div class="calc-head"><b>${c.title}</b><span>${c.note}</span></div>
+    <div class="calc-row">${field('vent', 'heightCm', 'Grösse', 'cm')}
+      <label class="cf"><span>Geschlecht</span><select data-vent="sex" aria-label="Geschlecht"><option value="">wählen</option>${c.sexes.map(x => `<option>${x}</option>`).join('')}</select></label>${op('→')}
+      <span class="res">Idealgewicht <b id="out-pbw">–</b></span></div>
+    <div class="calc-row"><span class="res">Tidalvolumen ${c.mlPerKg[0]}–${c.mlPerKg[1]} ml/kg: <b id="out-vt">–</b></span></div>
+    <div class="calc-note">${c.startNote}</div>
+  </div>`;
+}
+
+function calcHTML(c) {
+  const num = (key, label, unit, title) => field('blood', key, label, unit, title);
+  return `<div class="calc empty" id="calc">
+    <div class="calc-head"><b>${c.title}</b><span>${c.note}</span></div>
+    <div class="calc-row">${num('weightKg', 'Gewicht', 'kg')}${op('×')}
+      <label class="cf"><span>Richtwert</span><select data-blood="mlPerKg" aria-label="Richtwert Blutvolumen">${c.factors.map(f => `<option value="${f.mlPerKg}">${f.label} · ${f.mlPerKg} ml/kg</option>`).join('')}</select></label>${op('=')}
+      ${num('volumeMl', 'Blutvolumen', 'ml')}<span class="mode" id="vol-mode"></span></div>
+    <div class="calc-row">${num('suctionMl', 'Sauger', 'ml')}${op('−')}${num('irrigationMl', 'Spülung', 'ml')}${op('+')}${num('swabsMl', 'Tücher', 'ml', 'Blut in Tüchern und Kompressen, geschätzt')}${op('=')}
+      <span class="res">Blutverlust netto <b id="out-loss">–</b></span></div>
+    <div class="calc-row">${num('expectedMl', 'Erwarteter Blutverlust', 'ml', 'Einschätzung für den ganzen Eingriff, z. B. aus dem Team-Timeout')}${op('→')}<span class="res"><b id="out-exp">–</b></span></div>
+    <div class="calc-row">${num('hbStart', 'Hb Ausgangswert', 'g/l')}${num('hbMin', 'Hb-Grenze', 'g/l', 'Individuelle Transfusionsgrenze')}</div>
+    <div class="hbout" id="out-hb"></div>
+    <div class="calc-note">${c.hbNote}</div>
+  </div>`;
+}
+
+const BLOOD_INPUTS = ['weightKg', 'volumeMl', 'suctionMl', 'irrigationMl', 'swabsMl', 'expectedMl', 'hbStart', 'hbMin'];
+const bloodEntered = () => BLOOD_INPUTS.some(k => typeof (protocol.blood || {})[k] === 'number');
+
+/** Zeigt berechnetes Blutvolumen, Blutverlust netto und erwarteten Blutverlust an. Das Feld, in dem gerade getippt wird, bleibt unverändert. */
+function updateCalc() {
+  if (!CL.calculators) return;
+  const s = bloodSummary(protocol);
+  document.querySelectorAll('[data-blood]').forEach(f => {
+    if (f.dataset.blood === 'volumeMl' && f !== document.activeElement) f.value = s.volumeMl ?? '';
+  });
+  $('vol-mode').textContent = s.volumeMl ? (s.fromWeight ? 'aus Gewicht' : 'direkt eingegeben') : '';
+  $('out-loss').innerHTML = s.lossMl === null ? '–' : nb(fmtMl(s.lossMl) + (s.lossPct !== null ? ` · ${s.lossPct} %` : '')) + (s.implausible ? ' <span class="warn">Werte prüfen</span>' : '');
+  $('out-exp').innerHTML = s.expectedMl === null ? '–' : nb(s.expectedPct !== null ? `${s.expectedPct} % des Blutvolumens` : fmtMl(s.expectedMl)) +
+    (s.expectedExceeded ? ' <span class="warn">bereits überschritten</span>' : '');
+  const hb = [];
+  if (s.hbStart) {
+    const now = s.hbNow !== null ? `jetzt ca. <b>${s.hbNow} g/l</b>` : '';
+    const exp = s.hbAfterExpected !== null ? `nach erwartetem Blutverlust ca. <b class="${s.expectedBelowLimit ? 'warn' : ''}">${s.hbAfterExpected} g/l</b>` : '';
+    if (now || exp) hb.push('Hb rechnerisch: ' + [now, exp].filter(Boolean).join(' · '));
+    if (s.tolerableMl !== null) hb.push(`Tolerierbar bis Hb ${fmtNum(s.hbMin)} g/l: ca. ${fmtMl(s.tolerableMl)} · ` +
+      (s.limitReached ? '<span class="warn">Hb-Grenze rechnerisch erreicht</span>' : `noch ca. <b>${fmtMl(s.remainingMl)}</b>`));
+    if (s.hbUnitCheck) hb.push('<span class="warn">Hb in g/l eingeben, z. B. 140</span>');
+  }
+  $('out-hb').innerHTML = nb(hb.join('<br>'));
+  $('calc').classList.toggle('empty', !bloodEntered());
+}
+
+/** Überträgt die gespeicherten Werte in die Eingabefelder (bei Start, Abschluss und Neubeginn). */
+function syncCalc() {
+  if (!CL.calculators) return;
+  const b = protocol.blood || {};
+  document.querySelectorAll('[data-blood]').forEach(f => {
+    const k = f.dataset.blood;
+    f.value = k === 'mlPerKg' ? String(b.mlPerKg) : (typeof b[k] === 'number' ? String(b[k]).replace('.', ',') : '');
+    f.classList.remove('bad');
+  });
+  updateCalc();
+}
+
+const ventEntered = () => { const v = protocol.vent || {}; return typeof v.heightCm === 'number' || !!v.sex; };
+
+/** Zeigt Idealgewicht und Tidalvolumen 6–8 ml/kg Idealgewicht an. */
+function updateVent() {
+  if (!CL.calculators || !CL.calculators.vent) return;
+  const s = ventSummary(protocol);
+  $('out-pbw').innerHTML = s.pbwKg ? nb(`ca. ${fmtNum(s.pbwKg)} kg`) : s.heightCheck ? '<span class="warn">Grösse prüfen</span>' : '–';
+  $('out-vt').innerHTML = s.pbwKg ? nb(`${s.vtMinMl}–${fmtMl(s.vtMaxMl)}`) : '–';
+  $('calc-vent').classList.toggle('empty', !ventEntered());
+}
+
+function syncVent() {
+  if (!CL.calculators || !CL.calculators.vent) return;
+  const v = protocol.vent || {};
+  document.querySelectorAll('[data-vent]').forEach(f => {
+    const k = f.dataset.vent;
+    f.value = k === 'sex' ? (v.sex || '') : (typeof v[k] === 'number' ? String(v[k]).replace('.', ',') : '');
+    f.classList.remove('bad');
+  });
+  updateVent();
+}
+
+function applyVent(t) {
+  try { setVent(protocol, { [t.dataset.vent]: t.value }); t.classList.remove('bad'); updateVent(); }
+  catch (err) { t.classList.add('bad'); }
+}
+
+function applyBlood(t) {
+  try { setBlood(protocol, { [t.dataset.blood]: t.value }); t.classList.remove('bad'); updateCalc(); }
+  catch (err) { t.classList.add('bad'); }
+}
+
+function render() {
+  $('title').textContent = CL.title;
+  $('subtitle').textContent = CL.subtitle;
+  $('motto').textContent = CL.motto;
+  $('reason').innerHTML = CL.reasons.map(r => `<option>${r}</option>`).join('');
+  $('credit').textContent = 'Konzept: ' + CL.author + ' · ' + CL.source + ' · ' + CL.disclaimer;
+  $('privacy').textContent = CL.privacy;
+  $('triggers').textContent = CL.reassessment.triggers.join(' · ');
+  $('sections').innerHTML = CL.sections.map(s => sectionHTML(s, true)).join('');
+  $('dopes').innerHTML =
+    `<div class="dhead"><b>${DOPES.title} – ${DOPES.subtitle}</b><button class="link" style="color:#fff" data-close="1">schliessen</button></div>
+     <div class="first">${DOPES.first}</div>
+     <div class="sections">${DOPES.sections.map(s => sectionHTML(s, false)).join('')}</div>
+     <div class="credit">${DOPES.author} · ${DOPES.source}</div>`;
+}
+
+function syncNotes() {
+  document.querySelectorAll('input.note').forEach(n => n.value = protocol.sectionNotes[n.dataset.sec] || '');
+}
+
+function update() {
+  const p = progress(protocol, CL);
+  CL.sections.forEach(s => {
+    const st = p.sections[s.id];
+    $('cnt-' + s.id).textContent = `  ${st.done}/${st.all}`;
+    $('sec-' + s.id).classList.toggle('complete', st.done === st.all);
+  });
+  DOPES.sections.forEach(s => {
+    const d = s.items.filter(i => protocol.items[i.id].checked).length;
+    $('cnt-' + s.id).textContent = `  ${d}/${s.items.length}`;
+  });
+  $('pbar').style.width = (100 * p.total.done / p.total.all) + '%';
+  $('ptext').textContent = `${p.total.done}/${p.total.all} geprüft`;
+  protocol.completedAt = p.total.done === p.total.all ? new Date().toISOString() : null;
+  document.querySelectorAll('input[type=checkbox][data-id]').forEach(cb => {
+    const st = protocol.items[cb.dataset.id];
+    cb.checked = st.checked;
+    const li = $('li-' + cb.dataset.id);
+    li.classList.toggle('done', st.checked);
+    if (st.checked) li.classList.remove('missing');
+  });
+  document.querySelectorAll('input[type=radio][data-id]').forEach(rb => {
+    const st = protocol.items[rb.dataset.id];
+    rb.checked = st.value === rb.value;
+    const li = $('li-' + rb.dataset.id);
+    li.classList.toggle('done', st.checked);
+    if (st.checked) li.classList.remove('missing');
+  });
+  $('started').textContent = 'begonnen ' + fmtTime(protocol.startedAt);
+  $('printmeta').textContent = `Anlass: ${protocol.reason} · begonnen ${fmtDateTime(protocol.startedAt)} · ${p.total.done}/${p.total.all} geprüft`;
+}
+
+function renderHistory() {
+  $('historybox').classList.toggle('open', history.length > 0);
+  $('histcount').textContent = history.length ? `${history.length} ${history.length === 1 ? 'Kontrolle' : 'Kontrollen'}` : '';
+  $('history').innerHTML = history.map(h => `<li><b>${fmtTime(h.closedAt)}</b> · ${esc(h.reason)} · ` +
+    (h.open.length ? `<span class="no">${h.done}/${h.all}</span> · offen: ${esc(h.open.join(', '))}` : `<span class="ok">${h.done}/${h.all} vollständig</span>`) +
+    (h.blood && h.blood.lossMl !== null ? ` · Blutverlust ${fmtMl(h.blood.lossMl)}${h.blood.lossPct !== null ? ' = ' + h.blood.lossPct + ' %' : ''}${h.blood.hbNow ? ', Hb ca. ' + h.blood.hbNow + ' g/l' : ''}` : '') + '</li>').join('');
+}
+
+function toast(msg) { const t = $('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2600); }
+
+function start(reason, notes, blood, vent) {
+  protocol = createProtocol([CL, DOPES], reason, notes || {}, blood || {}, vent || {});
+  if (CL.calculators && protocol.blood.mlPerKg == null) protocol.blood.mlPerKg = CL.calculators.blood.factors[0].mlPerKg;
+  $('reason').value = reason;
+  document.querySelectorAll('li.missing').forEach(li => li.classList.remove('missing'));
+  syncNotes(); syncCalc(); syncVent(); update();
+}
+
+document.addEventListener('change', e => {
+  const t = e.target;
+  if (t.matches('input[type=checkbox][data-id]')) { setChecked(protocol, t.dataset.id, t.checked); update(); }
+  if (t.matches('input[type=radio][data-id]')) {
+    const list = t.dataset.id.includes('-') ? DOPES : CL;
+    setValue(protocol, t.dataset.id, t.value, list); update();
+  }
+  if (t.id === 'reason') { protocol.reason = t.value; update(); }
+  if (t.matches('[data-blood]')) applyBlood(t);
+  if (t.matches('[data-vent]')) applyVent(t);
+});
+document.addEventListener('input', e => {
+  const t = e.target;
+  if (t.matches('input.note')) setNote(protocol, t.dataset.sec, t.value);
+  if (t.matches('input[data-blood]')) applyBlood(t);
+  if (t.matches('input[data-vent]')) applyVent(t);
+});
+document.addEventListener('focusout', e => { if (e.target.matches && e.target.matches('input[data-blood]')) setTimeout(updateCalc, 0); });
+document.addEventListener('click', e => {
+  if (e.target.dataset.open) { e.preventDefault(); $('overlay').classList.add('open'); }
+  if (e.target.dataset.calcjump) {
+    e.preventDefault();
+    const kind = e.target.dataset.calcjump === 'vent' ? 'vent' : 'blood', key = kind === 'vent' ? 'heightCm' : 'weightKg';
+    const f = [...document.querySelectorAll(`[data-${kind}]`)].find(x => x.dataset[kind] === key);
+    f.scrollIntoView({ behavior: 'smooth', block: 'center' }); f.focus();
+  }
+  if (e.target.dataset.close || e.target.id === 'overlay') $('overlay').classList.remove('open');
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') $('overlay').classList.remove('open'); });
+
+$('close').onclick = () => {
+  const open = openItems(protocol, CL);
+  if (open.length) {
+    open.forEach(o => $('li-' + o.id).classList.add('missing'));
+    if (!confirm(`${open.length} ${open.length === 1 ? 'Punkt ist' : 'Punkte sind'} noch offen (rot markiert). Trotzdem abschliessen?`)) {
+      $('li-' + open[0].id).scrollIntoView({ behavior: 'smooth', block: 'center' }); return;
+    }
+  }
+  const entry = closeCheck(protocol, CL);
+  history.push(entry); renderHistory();
+  start('Reassessment (regelmässig)', protocol.sectionNotes, protocol.blood, protocol.vent);
+  toast(`Kontrolle um ${fmtTime(entry.closedAt)} gespeichert. Bemerkungen und Rechnerwerte bleiben stehen, die nächste Kontrolle kann beginnen.`);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+$('handoff').onclick = () => {
+  $('handofftext').value = toHandoffText(protocol, CL, history);
+  $('handoffbox').classList.add('open'); $('handoffbox').scrollIntoView({ behavior: 'smooth' });
+};
+$('closehand').onclick = () => $('handoffbox').classList.remove('open');
+$('copy').onclick = async () => {
+  const ta = $('handofftext');
+  try { await navigator.clipboard.writeText(ta.value); } catch (err) { ta.select(); document.execCommand('copy'); }
+  $('copy').textContent = 'kopiert ✓'; setTimeout(() => $('copy').textContent = 'kopieren', 2000);
+};
+$('export').onclick = () => {
+  const blob = new Blob([JSON.stringify({ protocol, history }, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'xABCDE_Protokoll_' + protocol.startedAt.replace(/[:.]/g, '-') + '.json';
+  a.click(); URL.revokeObjectURL(a.href);
+};
+$('print').onclick = () => window.print();
+$('reset').onclick = () => {
+  if (history.length || progress(protocol, CL).total.done || bloodEntered() || ventEntered()) { if (!confirm('Alle Einträge und den Verlauf löschen?')) return; }
+  history = []; renderHistory(); $('handoffbox').classList.remove('open');
+  start(CL.reasons[0], {}, {}, {});
+};
+
+render(); start(CL.reasons[0], {}); renderHistory();
+</script>
+<script>if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {});</script>
+</body>
+</html>

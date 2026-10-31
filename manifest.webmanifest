@@ -1,0 +1,29 @@
+{
+  "name": "xABCDE Anästhesie",
+  "short_name": "xABCDE",
+  "description": "Digitale intraoperative Antrittskontrolle nach xABCDE. Konzept aus einer Diplomarbeit, nicht klinisch validiert.",
+  "lang": "de-CH",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#EDEDED",
+  "theme_color": "#3C3C3B",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
