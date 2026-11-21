@@ -1,6 +1,6 @@
 // Offline-Unterstützung: zuerst aus dem Netz (immer aktuell), ohne Netz aus dem Zwischenspeicher.
 // Gespeichert werden nur die Dateien der Seite, keine Eingaben.
-const CACHE = 'xabcde-2.4';
+const CACHE = 'xabcde-2.6';
 const CORE = ['./', './index.html', './manifest.webmanifest', './apple-touch-icon.png', './icon-192.png', './icon-512.png', './icon-maskable-512.png'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE))); self.skipWaiting(); });
 self.addEventListener('activate', e => {

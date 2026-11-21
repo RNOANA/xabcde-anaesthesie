@@ -38,11 +38,9 @@
   .base-out b { color: var(--mint); }
   .base-out:empty { display:none; }
   .cf input[type=time] { width: 104px; }
-  .abga { display:flex; align-items:center; gap: 8px 12px; flex-wrap: wrap; margin-top: 6px; }
-  .abga .cf { flex-direction: row; align-items:center; gap: 6px; }
-  .abga-info { font-size: 12.5px; color: var(--anth); }
-  .abga-info b { color: var(--mint); }
-  .abga-info .warn { color: var(--red); font-weight: bold; }
+  .cf.wide { flex: 1 1 210px; }
+  .cf[hidden] { display: none; }
+  #basedata .cf.wide input { width: 100%; }
   .section { display:flex; gap:14px; background: var(--row); border-radius: 9px; padding: 12px 14px; margin: 8px 0; }
   .section.x { background: var(--mintbg); }
   .section.complete { box-shadow: inset 4px 0 0 var(--mint); }
@@ -64,6 +62,8 @@
   li.choice .opt { cursor:pointer; display:inline-flex; align-items:center; gap:4px; min-height: 28px; }
   li.choice .opt input { width:17px; height:17px; margin:0; accent-color: var(--anth); }
   li.choice.done .txt { text-decoration:none; color: inherit; }
+  li.choice .sizes { font-size: 12.5px; color: var(--sub); gap: 9px; }
+  li.choice .sizes .opt input { width:15px; height:15px; }
   .link { margin-left: 6px; font-size: 12px; color: var(--red); background:none; border:none; cursor:pointer; text-decoration: underline; padding:0; }
   .calc { margin-top: 10px; background:#fff; border: 1px solid var(--line); border-radius: 8px; padding: 9px 12px 10px; }
   .calc-head { display:flex; justify-content:space-between; align-items:baseline; gap: 4px 12px; flex-wrap: wrap; font-size: 13.5px; color: var(--anth); }
@@ -173,16 +173,16 @@
   <div id="printmeta"></div>
   <div id="handoffbox"><div class="dhead"><b>Übergabetext</b><span><button id="copy" class="link" style="color:#fff">kopieren</button> <button id="closehand" class="link" style="color:#fff">schliessen</button></span></div><textarea id="handofftext" rows="11" readonly></textarea></div>
   <div id="basedata"></div>
-  <div class="sections" id="sections"><div class="section x" id="sec-x"><div class="badge" style="background:#0E8571">x</div><div class="content"><div class="head"><h2>Lagebeurteilung<span class="count" id="cnt-x"></span></h2><span class="tag">Xtra · Überblick</span></div><ul><li id="li-x1"><label><input type="checkbox" data-id="x1"> <span><span class="txt">Gesamteindruck</span> <span class="hint">Mit frischem Blick über das Abdecktuch auf Patientin oder Patient und Operationsfeld</span></span></label></li><li id="li-x2" class="choice"><span class="txt"><b>Lage</b></span> <span class="opts"><label class="opt"><input type="radio" name="x2" value="stabil" data-id="x2"> stabil</label><label class="opt"><input type="radio" name="x2" value="instabil" data-id="x2"> instabil</label></span> <span class="hint">Auch bei instabiler Lage A bis E der Reihe nach, akuten Handlungsbedarf im zugehörigen Buchstaben sofort umsetzen</span></li><li id="li-x3" class="choice"><span class="txt"><b>Handlungsbedarf</b></span> <span class="opts"><label class="opt"><input type="radio" name="x3" value="ja" data-id="x3"> ja</label><label class="opt"><input type="radio" name="x3" value="nein" data-id="x3"> nein</label></span> <span class="hint">Jetzt oder demnächst, z. B. tiefe Relaxierung, Blutdruckziel, bevorstehende Umlagerung · bei stabiler Lage ohne Handlungsbedarf Rundgang um den Operationstisch</span></li><li id="li-x4"><label><input type="checkbox" data-id="x4"> <span><span class="txt">OP-Phase & nächster Schritt</span> <span class="hint">Stand des Eingriffs und nächster Schritt, z. B. Wundverschluss oder Ausleitung · geplantes Vorgehen bekannt, etwa bei schwierigem Atemweg</span></span></label></li></ul><input class="note" data-sec="x" placeholder="Bemerkung (optional, ohne Personendaten)" aria-label="Bemerkung Lagebeurteilung"></div></div><div class="section" id="sec-A"><div class="badge" style="background:#E1001A">A</div><div class="content"><div class="head"><h2>Airway<span class="count" id="cnt-A"></span></h2><span class="tag">Kopf-Check</span></div><ul><li id="li-A1"><label><input type="checkbox" data-id="A1"> <span><span class="txt">Atemwegssicherung</span> <span class="hint">Tubus oder Larynxmaske: Lage, beim Tubus Tiefe an der Zahnreihe, Fixierung, Cuffdruck im Zielbereich</span></span></label></li><li id="li-A2"><label><input type="checkbox" data-id="A2"> <span><span class="txt">Schläuche frei</span> <span class="hint">Beatmungsschläuche, Filter und CO₂-Messleitung intakt, nicht abgeknickt oder diskonnektiert</span></span></label></li><li id="li-A3"><label><input type="checkbox" data-id="A3"> <span><span class="txt">Augenschutz</span> <span class="hint">Augen geschlossen und druckfrei, besonders bei langer Dauer sowie in Bauch-, Seiten- und Kopftieflage</span></span></label></li><li id="li-A4"><label><input type="checkbox" data-id="A4"> <span><span class="txt">Kopflagerung</span> <span class="hint">Kopf druckfrei und neutral gelagert, Ohren nicht abgeknickt, kein Druck durch Tubus oder Schläuche im Gesicht</span></span></label></li></ul><input class="note" data-sec="A" placeholder="Bemerkung (optional, ohne Personendaten)" aria-label="Bemerkung Airway"></div></div><div class="section" id="sec-B"><div class="badge" style="background:#E1001A">B</div><div class="content"><div class="head"><h2>Breathing<span class="count" id="cnt-B"></span></h2><span class="tag">Beatmung</span></div><ul><li id="li-B1"><label><input type="checkbox" data-id="B1"> <span><span class="txt">SpO₂ & Kapnographie</span> <span class="hint">Sättigung mit guter Pulskurve, Kapnographiekurve vorhanden und typisch, Werte plausibel</span></span></label></li><li id="li-B2"><label><input type="checkbox" data-id="B2"> <span><span class="txt">Beatmungsparameter</span> <button class="link" data-calcjump="vent">Rechner</button> <span class="hint">Modus, Tidalvolumen nach Idealgewicht, Frequenz, PEEP und FiO₂ passend zu Eingriff, Lagerung und OP-Phase, besonders nach Pneumoperitoneum oder Lagewechsel</span></span></label></li><li id="li-B3"><label><input type="checkbox" data-id="B3"> <span><span class="txt">Auskultation</span> <span class="hint">Seitengleiche Belüftung · Nebengeräusche wie Giemen oder Brummen (obstruktiv), Rasselgeräusche, Stridor (besonders bei Larynxmaske)</span></span></label></li><li id="li-B4"><label><input type="checkbox" data-id="B4"> <span><span class="txt">Alarmgrenzen & Trends</span> <span class="hint">Alarmgrenzen für Atemwegsdruck, Minutenvolumen und endtidales CO₂ · Trendkurven für Compliance und Sauerstoffaufnahme, Druck-Volumen-Schleife</span></span></label></li><li id="li-B5"><label><input type="checkbox" data-id="B5"> <span><span class="txt">akut: DOPES · HANDS</span> <button class="link" data-open="DOPES">öffnen</button> <span class="hint">Nur bei plötzlicher Beatmungsverschlechterung: Ursache suchen und parallel handeln</span></span></label></li></ul><input class="note" data-sec="B" placeholder="Bemerkung (optional, ohne Personendaten)" aria-label="Bemerkung Breathing"></div></div><div class="section" id="sec-C"><div class="badge" style="background:#E1001A">C</div><div class="content"><div class="head"><h2>Circulation<span class="count" id="cnt-C"></span></h2><span class="tag">Kreislauf & Monitoring</span></div><ul><li id="li-C1"><label><input type="checkbox" data-id="C1"> <span><span class="txt">Hämodynamik & Zielwerte</span> <span class="hint">Blutdruckziel klar und eingehalten, Herzfrequenz und Rhythmus, Katecholaminbedarf · Werte plausibel, Druckaufnehmer auf Referenzhöhe (besonders nach Lagewechsel), Manschette frei</span></span></label></li><li id="li-C2"><label><input type="checkbox" data-id="C2"> <span><span class="txt">Blutverlust & Spülmenge</span> <button class="link" data-calcjump="blood">Rechner</button> <span class="hint">Bisherigen Blutverlust abzüglich Spülmenge bilanzieren, zu erwartenden Blutverlust einschätzen · Hb-Ausgangswert und Verlauf (ABGA), Verfügbarkeit von Blutprodukten</span></span></label></li><li id="li-C3" class="choice"><span class="txt"><b>ABGA</b></span> <span class="opts"><label class="opt"><input type="radio" name="C3" value="ja" data-id="C3"> ja</label><label class="opt"><input type="radio" name="C3" value="nein" data-id="C3"> nein</label></span> <span class="hint">Individuell prüfen: bei relevantem oder drohendem Blutverlust, instabilem Kreislauf, Einlungenventilation, langer Beatmung oder langer Dauer · Hb, Laktat, Base Excess, pCO₂, Elektrolyte, Glukose, Verlauf mit Vorwerten vergleichen</span></li><li id="li-C4"><label><input type="checkbox" data-id="C4"> <span><span class="txt">Zugänge</span> <span class="hint">Venös und arteriell: Anzahl, Lage, Grösse in Gauge und Funktion, passend zu Eingriff und Volumenbedarf · Funktion unter der Abdeckung aktiv prüfen</span></span></label></li><li id="li-C5"><label><input type="checkbox" data-id="C5"> <span><span class="txt">Volumenstatus & Diurese</span> <span class="hint">Bilanz aus Infusionen und Verlusten, Zeichen von Volumenmangel · Urinausscheidung mit Menge und Farbe, Katheter durchgängig</span></span></label></li><li id="li-C6"><label><input type="checkbox" data-id="C6"> <span><span class="txt">Alarmgrenzen</span> <span class="hint">Für Blutdruck, Herzfrequenz und SpO₂ patientenindividuell und eingriffsbezogen eingestellt, Alarme nicht stummgeschaltet</span></span></label></li><li id="li-C7"><label><input type="checkbox" data-id="C7"> <span><span class="txt">Narkosetiefe (BIS)</span> <span class="hint">Wert und Verlauf im Zielbereich, Signalqualität gut · besonders bei TIVA mit Relaxierung</span></span></label></li></ul><input class="note" data-sec="C" placeholder="Bemerkung (optional, ohne Personendaten)" aria-label="Bemerkung Circulation"></div></div><div class="section" id="sec-D"><div class="badge" style="background:#E1001A">D</div><div class="content"><div class="head"><h2>Drugs<span class="count" id="cnt-D"></span></h2><span class="tag">Narkose & Medikation</span></div><ul><li id="li-D1" class="choice"><span class="txt"><b>Narkose</b></span> <span class="opts"><label class="opt"><input type="radio" name="D1" value="TIVA" data-id="D1"> TIVA</label><label class="opt"><input type="radio" name="D1" value="volatil" data-id="D1"> volatil</label></span> <span class="hint">Laufende Substanzen für Hypnose und Analgesie, allfällige Regionalanästhesie oder Periduralkatheter</span></li><li id="li-D2"><label><input type="checkbox" data-id="D2"> <span><span class="txt">Zielkonzentration</span> <span class="hint">Passend zu Eingriff und OP-Phase · TIVA: Zielwerte für Hypnotikum und Opioid, Patientendaten im TCI-Modell korrekt · volatil: endtidale Konzentration (MAC), richtiges Alter im Narkosegerät</span></span></label></li><li id="li-D3"><label><input type="checkbox" data-id="D3"> <span><span class="txt">Laufrate & Flow</span> <span class="hint">Perfusoren: Rate korrekt, Leitung bis zum Zugang durchgängig · volatil: Frischgasflow, Verdampfer gefüllt</span></span></label></li><li id="li-D4" class="choice"><span class="txt"><b>Relaxierung</b></span> <span class="opts"><label class="opt"><input type="radio" name="D4" value="ja" data-id="D4"> ja</label><label class="opt"><input type="radio" name="D4" value="nein" data-id="D4"> nein</label></span> <span class="hint">Bei ja: quantitatives neuromuskuläres Monitoring (TOF), Zeitpunkt der letzten Gabe, Nachdosierung und Antagonisierung planen</span></li><li id="li-D5"><label><input type="checkbox" data-id="D5"> <span><span class="txt">Pupillen</span> <span class="hint">Wie im klassischen ABCDE: Weite als Hinweis auf die Analgesie, Seitengleichheit · Seitendifferenz: Druck auf das Auge oder neurologisches Ereignis</span></span></label></li><li id="li-D6"><label><input type="checkbox" data-id="D6"> <span><span class="txt">Reserve & Nachschub</span> <span class="hint">Reserve- und Notfallmedikation griffbereit, Nachschub für laufende Perfusoren vorbereitet, besonders vor Lagewechsel oder Ausleitung</span></span></label></li><li id="li-D7"><label><input type="checkbox" data-id="D7"> <span><span class="txt">Antibiotikaprophylaxe</span> <span class="hint">Zeitpunkt der letzten Gabe, Wiederholungsdosis je nach Dauer und Blutverlust</span></span></label></li></ul><input class="note" data-sec="D" placeholder="Bemerkung (optional, ohne Personendaten)" aria-label="Bemerkung Drugs"></div></div><div class="section" id="sec-E"><div class="badge" style="background:#E1001A">E</div><div class="content"><div class="head"><h2>Environment<span class="count" id="cnt-E"></span></h2><span class="tag">Everything else</span></div><ul><li id="li-E1"><label><input type="checkbox" data-id="E1"> <span><span class="txt">Lagerung & Druckstellen</span> <span class="hint">Von Kopf bis Fuss: Auflagepunkte gepolstert, Arme ohne Überstreckung, keine Kabel oder Schläuche unter dem Körper · nach jedem Lagewechsel erneut, besonders in Bauchlage</span></span></label></li><li id="li-E2"><label><input type="checkbox" data-id="E2"> <span><span class="txt">Wärmemanagement</span> <span class="hint">Temperatur gemessen, aktive Wärmung läuft, Infusionen bei grossen Mengen gewärmt</span></span></label></li><li id="li-E3"><label><input type="checkbox" data-id="E3"> <span><span class="txt">Arbeitsplatz</span> <span class="hint">Zugänge und Geräte frei erreichbar, Leitungen ohne Zug, Knick und Stolperfallen · Beatmungsbeutel, Absaugung und Material griffbereit</span></span></label></li><li id="li-E4"><label><input type="checkbox" data-id="E4"> <span><span class="txt">Verlegungsziel</span> <span class="hint">Aufwachraum, Intensivstation oder Bettenstation geklärt, bei Bedarf Platz reserviert</span></span></label></li><li id="li-E5"><label><input type="checkbox" data-id="E5"> <span><span class="txt">Dokumentation</span> <span class="hint">Zeitpunkt, Anlass und Befund dokumentiert, bei Übernahme auch der Personalwechsel</span></span></label></li></ul><input class="note" data-sec="E" placeholder="Bemerkung (optional, ohne Personendaten)" aria-label="Bemerkung Environment"></div></div></div>
+  <div class="sections" id="sections"><div class="section x" id="sec-x"><div class="badge" style="background:#0E8571">x</div><div class="content"><div class="head"><h2>Lagebeurteilung<span class="count" id="cnt-x"></span></h2><span class="tag">Xtra · Überblick</span></div><ul><li id="li-x1"><label><input type="checkbox" data-id="x1"> <span><span class="txt">Gesamteindruck</span> <span class="hint">Rundgang, frischer Blick</span></span></label></li><li id="li-x2" class="choice"><span class="txt"><b>Lage</b></span> <span class="opts"><label class="opt"><input type="radio" name="x2" value="stabil" data-id="x2"> stabil</label><label class="opt"><input type="radio" name="x2" value="instabil" data-id="x2"> instabil</label></span> </li><li id="li-x3" class="choice"><span class="txt"><b>Handlungsbedarf</b></span> <span class="opts"><label class="opt"><input type="radio" name="x3" value="ja" data-id="x3"> ja</label><label class="opt"><input type="radio" name="x3" value="nein" data-id="x3"> nein</label></span> </li><li id="li-x4"><label><input type="checkbox" data-id="x4"> <span><span class="txt">OP-Phase & nächster Schritt</span> </span></label></li></ul><input class="note" data-sec="x" placeholder="Bemerkung (ohne Personendaten)" aria-label="Bemerkung Lagebeurteilung"></div></div><div class="section" id="sec-A"><div class="badge" style="background:#E1001A">A</div><div class="content"><div class="head"><h2>Airway<span class="count" id="cnt-A"></span></h2><span class="tag">Kopf-Check</span></div><ul><li id="li-A1"><label><input type="checkbox" data-id="A1"> <span><span class="txt">Atemwegssicherung</span> <span class="hint">Lage, Tiefe, Fixierung, Cuffdruck</span></span></label></li><li id="li-A2"><label><input type="checkbox" data-id="A2"> <span><span class="txt">Schläuche frei</span> </span></label></li><li id="li-A3"><label><input type="checkbox" data-id="A3"> <span><span class="txt">Augenschutz</span> <span class="hint">Geschlossen und druckfrei</span></span></label></li><li id="li-A4"><label><input type="checkbox" data-id="A4"> <span><span class="txt">Kopflagerung</span> <span class="hint">Neutral, druckfrei, Ohren frei, venöser Abfluss gesichert</span></span></label></li></ul><input class="note" data-sec="A" placeholder="Bemerkung (ohne Personendaten)" aria-label="Bemerkung Airway"></div></div><div class="section" id="sec-B"><div class="badge" style="background:#E1001A">B</div><div class="content"><div class="head"><h2>Breathing<span class="count" id="cnt-B"></span></h2><span class="tag">Beatmung</span></div><ul><li id="li-B1"><label><input type="checkbox" data-id="B1"> <span><span class="txt">SpO₂ & Kapnographie</span> </span></label></li><li id="li-B2"><label><input type="checkbox" data-id="B2"> <span><span class="txt">Beatmungsparameter</span> <button class="link" data-calcjump="vent">Rechner</button> <span class="hint">Tidalvolumen nach Idealgewicht, PEEP, FiO₂ passend zu Lagerung und Phase</span></span></label></li><li id="li-B3"><label><input type="checkbox" data-id="B3"> <span><span class="txt">Auskultation</span> </span></label></li><li id="li-B4"><label><input type="checkbox" data-id="B4"> <span><span class="txt">Alarmgrenzen & Trends</span> <span class="hint">Atemwegsdruck, Minutenvolumen, etCO₂ · Trendkurven</span></span></label></li><li id="li-B5"><label><input type="checkbox" data-id="B5"> <span><span class="txt">akut: DOPES · HANDS</span> <button class="link" data-open="DOPES">öffnen</button> <span class="hint">Bei plötzlicher Verschlechterung</span></span></label></li></ul><input class="note" data-sec="B" placeholder="Bemerkung (ohne Personendaten)" aria-label="Bemerkung Breathing"></div></div><div class="section" id="sec-C"><div class="badge" style="background:#E1001A">C</div><div class="content"><div class="head"><h2>Circulation<span class="count" id="cnt-C"></span></h2><span class="tag">Kreislauf & Monitoring</span></div><ul><li id="li-C1"><label><input type="checkbox" data-id="C1"> <span><span class="txt">Hämodynamik & Zielwerte</span> <span class="hint">Blutdruckziel, Rhythmus · Druckaufnehmer auf Referenzhöhe</span></span></label></li><li id="li-C2"><label><input type="checkbox" data-id="C2"> <span><span class="txt">Blutverlust & Spülmenge</span> <button class="link" data-calcjump="blood">Rechner</button> <span class="hint">Sauger minus Spülung · erwarteter Blutverlust</span></span></label></li><li id="li-C3" class="choice"><span class="txt"><b>BGA</b></span> <span class="opts"><label class="opt"><input type="radio" name="C3" value="ja" data-id="C3"> ja</label><label class="opt"><input type="radio" name="C3" value="nein" data-id="C3"> nein</label></span> <span class="hint">Bei Blutung, Instabilität, Einlungenventilation, langer Dauer · Uhrzeit und Hb in den Grunddaten</span></li><li id="li-C4"><label><input type="checkbox" data-id="C4"> <span><span class="txt">Zugänge</span> <span class="hint">Lage, Grösse, Funktion unter der Abdeckung</span></span></label></li><li id="li-C5"><label><input type="checkbox" data-id="C5"> <span><span class="txt">Volumenstatus & Diurese</span> <span class="hint">Bilanz, Urin nach Menge und Farbe</span></span></label></li><li id="li-C6"><label><input type="checkbox" data-id="C6"> <span><span class="txt">Alarmgrenzen</span> <span class="hint">Patientenindividuell</span></span></label></li><li id="li-C7"><label><input type="checkbox" data-id="C7"> <span><span class="txt">Narkosetiefe (BIS)</span> <span class="hint">Im Zielbereich, Signalqualität gut</span></span></label></li></ul><input class="note" data-sec="C" placeholder="Bemerkung (ohne Personendaten)" aria-label="Bemerkung Circulation"></div></div><div class="section" id="sec-D"><div class="badge" style="background:#E1001A">D</div><div class="content"><div class="head"><h2>Drugs<span class="count" id="cnt-D"></span></h2><span class="tag">Narkose & Medikation</span></div><ul><li id="li-D1" class="choice"><span class="txt"><b>Narkose</b></span> <span class="opts"><label class="opt"><input type="radio" name="D1" value="TIVA" data-id="D1"> TIVA</label><label class="opt"><input type="radio" name="D1" value="volatil" data-id="D1"> volatil</label></span> </li><li id="li-D2"><label><input type="checkbox" data-id="D2"> <span><span class="txt">Zielkonzentration</span> <span class="hint">TIVA: TCI-Daten korrekt · volatil: MAC, Alter im Gerät</span></span></label></li><li id="li-D3"><label><input type="checkbox" data-id="D3"> <span><span class="txt">Laufrate, Flow & Nachschub</span> <span class="hint">Nachschub ausreichend für die OP-Dauer</span></span></label></li><li id="li-D4" class="choice"><span class="txt"><b>Relaxierung</b></span> <span class="opts"><label class="opt"><input type="radio" name="D4" value="ja" data-id="D4"> ja</label><label class="opt"><input type="radio" name="D4" value="nein" data-id="D4"> nein</label></span> <span class="hint">Bei ja: TOF, letzte Gabe, Antagonisierung planen</span></li><li id="li-D5" class="choice"><span class="txt"><b>Pupillen</b></span> <span class="opts"><label class="opt"><input type="radio" name="D5" value="isokor" data-id="D5"> isokor</label><label class="opt"><input type="radio" name="D5" value="anisokor" data-id="D5"> anisokor</label></span> <span class="opts sizes"><label class="opt"><input type="radio" name="D5-size" value="eng" data-size="D5"> eng</label><label class="opt"><input type="radio" name="D5-size" value="mittel" data-size="D5"> mittel</label><label class="opt"><input type="radio" name="D5-size" value="weit" data-size="D5"> weit</label></span> </li><li id="li-D6"><label><input type="checkbox" data-id="D6"> <span><span class="txt">Notfallmedikamente</span> <span class="hint">Patientenindividuell, griffbereit</span></span></label></li><li id="li-D7"><label><input type="checkbox" data-id="D7"> <span><span class="txt">Antibiotikaprophylaxe</span> <span class="hint">Letzte Gabe, Wiederholung nach Stanford-Guideline</span></span></label></li><li id="li-D8" class="choice"><span class="txt"><b>PONV-Prophylaxe</b></span> <span class="opts"><label class="opt"><input type="radio" name="D8" value="gegeben" data-id="D8"> gegeben</label><label class="opt"><input type="radio" name="D8" value="geplant" data-id="D8"> geplant</label><label class="opt"><input type="radio" name="D8" value="nicht nötig" data-id="D8"> nicht nötig</label></span> <span class="hint">Risiko nach Apfel: weiblich, nicht rauchend, PONV oder Reisekrankheit, Opioide postoperativ</span></li></ul><input class="note" data-sec="D" placeholder="Bemerkung (ohne Personendaten)" aria-label="Bemerkung Drugs"></div></div><div class="section" id="sec-E"><div class="badge" style="background:#E1001A">E</div><div class="content"><div class="head"><h2>Environment<span class="count" id="cnt-E"></span></h2><span class="tag">Everything else</span></div><ul><li id="li-E1"><label><input type="checkbox" data-id="E1"> <span><span class="txt">Lagerung & Druckstellen</span> <span class="hint">Gepolstert</span></span></label></li><li id="li-E2"><label><input type="checkbox" data-id="E2"> <span><span class="txt">Wärmemanagement</span> <span class="hint">Temperatur, aktive Wärmung</span></span></label></li><li id="li-E3"><label><input type="checkbox" data-id="E3"> <span><span class="txt">Arbeitsplatz</span> <span class="hint">Zugänge erreichbar, Absaugung bereit</span></span></label></li><li id="li-E4"><label><input type="checkbox" data-id="E4"> <span><span class="txt">Verlegungsziel</span> <span class="hint">IMC, Intensivstation oder Aufwachraum</span></span></label></li><li id="li-E5"><label><input type="checkbox" data-id="E5"> <span><span class="txt">Dokumentation</span> <span class="hint">Lagerung, postoperative Verordnungen</span></span></label></li></ul><input class="note" data-sec="E" placeholder="Bemerkung (ohne Personendaten)" aria-label="Bemerkung Environment"></div></div></div>
   <div id="historybox"><div class="dhead"><b>Verlauf der Kontrollen</b><span id="histcount"></span></div><ul id="history"></ul></div>
   <div class="credit" id="credit">Konzept: Noah Reichle · Diplomarbeit NDS Anästhesiepflege, Universitätsspital Basel, 2026 · Konzept aus einer Diplomarbeit, nicht klinisch validiert. Ersetzt keine fachliche Beurteilung.</div>
-  <div class="privacy" id="privacy">Keine Personendaten wie Name oder Geburtsdatum in die Bemerkungen eingeben.</div>
+  <div class="privacy" id="privacy">Keine Personendaten wie Name oder Geburtsdatum eingeben.</div>
   <footer><b>Reassessment</b><span id="triggers">nach jeder Übernahme · nach Lage- und Situationswechseln · nach jeder Massnahme · in regelmässigen Abständen</span></footer>
 </div>
-<div id="overlay" role="dialog" aria-modal="true" aria-label="DOPES · HANDS"><div id="dopes"><div class="dhead"><b>DOPES · HANDS – Akutes Beatmungsproblem</b><button class="link" style="color:#fff" data-close="1">schliessen</button></div><div class="first">Zuerst: an den Beutel, FiO₂ 1,0</div><div class="sections"><div class="section" id="sec-DOPES-D"><div class="badge" style="background:#E1001A">D</div><div class="content"><div class="head"><h2>Dislokation<span class="count" id="cnt-DOPES-D"></span></h2><span class="tag">Ursache suchen</span></div><ul><li id="li-DOPES-D1"><label><input type="checkbox" data-id="DOPES-D1"> <span><span class="txt">Tubus ösophageal, endobronchial oder herausgerutscht?</span> </span></label></li></ul></div></div><div class="section" id="sec-DOPES-O"><div class="badge" style="background:#E1001A">O</div><div class="content"><div class="head"><h2>Obstruktion<span class="count" id="cnt-DOPES-O"></span></h2><span class="tag">Ursache suchen</span></div><ul><li id="li-DOPES-O1"><label><input type="checkbox" data-id="DOPES-O1"> <span><span class="txt">Sekret, Blut, Knick in Tubus oder System?</span> </span></label></li></ul></div></div><div class="section" id="sec-DOPES-P"><div class="badge" style="background:#E1001A">P</div><div class="content"><div class="head"><h2>Patient<span class="count" id="cnt-DOPES-P"></span></h2><span class="tag">Ursache suchen</span></div><ul><li id="li-DOPES-P1"><label><input type="checkbox" data-id="DOPES-P1"> <span><span class="txt">Pneumothorax, Kreislaufversagen, Pressen?</span> </span></label></li></ul></div></div><div class="section" id="sec-DOPES-E"><div class="badge" style="background:#E1001A">E</div><div class="content"><div class="head"><h2>Equipment<span class="count" id="cnt-DOPES-E"></span></h2><span class="tag">Ursache suchen</span></div><ul><li id="li-DOPES-E1"><label><input type="checkbox" data-id="DOPES-E1"> <span><span class="txt">Gerät, Schläuche, O₂-Versorgung, Einstellungen?</span> </span></label></li></ul></div></div><div class="section" id="sec-DOPES-S"><div class="badge" style="background:#E1001A">S</div><div class="content"><div class="head"><h2>Stomach / Sedation<span class="count" id="cnt-DOPES-S"></span></h2><span class="tag">Ursache suchen</span></div><ul><li id="li-DOPES-S1"><label><input type="checkbox" data-id="DOPES-S1"> <span><span class="txt">Magen überbläht? Narkose zu flach?</span> </span></label></li></ul></div></div><div class="section" id="sec-HANDS-H"><div class="badge" style="background:#0E8571">H</div><div class="content"><div class="head"><h2>Hand<span class="count" id="cnt-HANDS-H"></span></h2><span class="tag">parallel handeln</span></div><ul><li id="li-HANDS-H1"><label><input type="checkbox" data-id="HANDS-H1"> <span><span class="txt">Beutel mit FiO₂ 1,0: sehen, hören, fühlen</span> </span></label></li></ul></div></div><div class="section" id="sec-HANDS-A"><div class="badge" style="background:#0E8571">A</div><div class="content"><div class="head"><h2>Absaugen<span class="count" id="cnt-HANDS-A"></span></h2><span class="tag">parallel handeln</span></div><ul><li id="li-HANDS-A1"><label><input type="checkbox" data-id="HANDS-A1"> <span><span class="txt">Tubus durchgängig? Ggf. Magensonde</span> </span></label></li></ul></div></div><div class="section" id="sec-HANDS-N"><div class="badge" style="background:#0E8571">N</div><div class="content"><div class="head"><h2>Neueinstellung<span class="count" id="cnt-HANDS-N"></span></h2><span class="tag">parallel handeln</span></div><ul><li id="li-HANDS-N1"><label><input type="checkbox" data-id="HANDS-N1"> <span><span class="txt">Einstellungen prüfen, Air-Trapping (iPEEP)?</span> </span></label></li></ul></div></div><div class="section" id="sec-HANDS-D"><div class="badge" style="background:#0E8571">D</div><div class="content"><div class="head"><h2>Diagnostik<span class="count" id="cnt-HANDS-D"></span></h2><span class="tag">parallel handeln</span></div><ul><li id="li-HANDS-D1"><label><input type="checkbox" data-id="HANDS-D1"> <span><span class="txt">Thoraxsonographie, ABGA, ggf. Röntgen</span> </span></label></li></ul></div></div><div class="section" id="sec-HANDS-S"><div class="badge" style="background:#0E8571">S</div><div class="content"><div class="head"><h2>Sedierung<span class="count" id="cnt-HANDS-S"></span></h2><span class="tag">parallel handeln</span></div><ul><li id="li-HANDS-S1"><label><input type="checkbox" data-id="HANDS-S1"> <span><span class="txt">Bei Pressen: Sedierungsbolus</span> </span></label></li></ul></div></div></div><div class="credit">Noah Reichle · inhaltlich nach Fandler & Gotthardt (2018) und Notfallguru (2026)</div></div></div>
+<div id="overlay" role="dialog" aria-modal="true" aria-label="DOPES · HANDS"><div id="dopes"><div class="dhead"><b>DOPES · HANDS – Akutes Beatmungsproblem</b><button class="link" style="color:#fff" data-close="1">schliessen</button></div><div class="first">Zuerst: manuelle Beatmung, FiO₂ 1,0</div><div class="sections"><div class="section" id="sec-DOPES-D"><div class="badge" style="background:#E1001A">D</div><div class="content"><div class="head"><h2>Dislokation<span class="count" id="cnt-DOPES-D"></span></h2><span class="tag">Ursache suchen</span></div><ul><li id="li-DOPES-D1"><label><input type="checkbox" data-id="DOPES-D1"> <span><span class="txt">Tubus ösophageal, endobronchial oder herausgerutscht?</span> </span></label></li></ul></div></div><div class="section" id="sec-DOPES-O"><div class="badge" style="background:#E1001A">O</div><div class="content"><div class="head"><h2>Obstruktion<span class="count" id="cnt-DOPES-O"></span></h2><span class="tag">Ursache suchen</span></div><ul><li id="li-DOPES-O1"><label><input type="checkbox" data-id="DOPES-O1"> <span><span class="txt">Sekret, Blut, Knick in Tubus oder System?</span> </span></label></li></ul></div></div><div class="section" id="sec-DOPES-P"><div class="badge" style="background:#E1001A">P</div><div class="content"><div class="head"><h2>Patient<span class="count" id="cnt-DOPES-P"></span></h2><span class="tag">Ursache suchen</span></div><ul><li id="li-DOPES-P1"><label><input type="checkbox" data-id="DOPES-P1"> <span><span class="txt">Pneumothorax, Kreislaufversagen, Pressen?</span> </span></label></li></ul></div></div><div class="section" id="sec-DOPES-E"><div class="badge" style="background:#E1001A">E</div><div class="content"><div class="head"><h2>Equipment<span class="count" id="cnt-DOPES-E"></span></h2><span class="tag">Ursache suchen</span></div><ul><li id="li-DOPES-E1"><label><input type="checkbox" data-id="DOPES-E1"> <span><span class="txt">Gerät, Schläuche, O₂-Versorgung, Einstellungen?</span> </span></label></li></ul></div></div><div class="section" id="sec-DOPES-S"><div class="badge" style="background:#E1001A">S</div><div class="content"><div class="head"><h2>Stomach / Sedation<span class="count" id="cnt-DOPES-S"></span></h2><span class="tag">Ursache suchen</span></div><ul><li id="li-DOPES-S1"><label><input type="checkbox" data-id="DOPES-S1"> <span><span class="txt">Magen überbläht? Narkose zu flach?</span> </span></label></li></ul></div></div><div class="section" id="sec-HANDS-H"><div class="badge" style="background:#0E8571">H</div><div class="content"><div class="head"><h2>Hand<span class="count" id="cnt-HANDS-H"></span></h2><span class="tag">parallel handeln</span></div><ul><li id="li-HANDS-H1"><label><input type="checkbox" data-id="HANDS-H1"> <span><span class="txt">Manuelle Beatmung mit FiO₂ 1,0: sehen, hören, fühlen</span> </span></label></li></ul></div></div><div class="section" id="sec-HANDS-A"><div class="badge" style="background:#0E8571">A</div><div class="content"><div class="head"><h2>Absaugen<span class="count" id="cnt-HANDS-A"></span></h2><span class="tag">parallel handeln</span></div><ul><li id="li-HANDS-A1"><label><input type="checkbox" data-id="HANDS-A1"> <span><span class="txt">Tubus durchgängig? Ggf. Magensonde</span> </span></label></li></ul></div></div><div class="section" id="sec-HANDS-N"><div class="badge" style="background:#0E8571">N</div><div class="content"><div class="head"><h2>Neueinstellung<span class="count" id="cnt-HANDS-N"></span></h2><span class="tag">parallel handeln</span></div><ul><li id="li-HANDS-N1"><label><input type="checkbox" data-id="HANDS-N1"> <span><span class="txt">Einstellungen prüfen, Air-Trapping (iPEEP)?</span> </span></label></li></ul></div></div><div class="section" id="sec-HANDS-D"><div class="badge" style="background:#0E8571">D</div><div class="content"><div class="head"><h2>Diagnostik<span class="count" id="cnt-HANDS-D"></span></h2><span class="tag">parallel handeln</span></div><ul><li id="li-HANDS-D1"><label><input type="checkbox" data-id="HANDS-D1"> <span><span class="txt">Thoraxsonographie, BGA, ggf. Röntgen</span> </span></label></li></ul></div></div><div class="section" id="sec-HANDS-S"><div class="badge" style="background:#0E8571">S</div><div class="content"><div class="head"><h2>Sedierung<span class="count" id="cnt-HANDS-S"></span></h2><span class="tag">parallel handeln</span></div><ul><li id="li-HANDS-S1"><label><input type="checkbox" data-id="HANDS-S1"> <span><span class="txt">Bei Pressen: Sedierungsbolus</span> </span></label></li></ul></div></div></div><div class="credit">Noah Reichle · inhaltlich nach Fandler & Gotthardt (2018) und Notfallguru (2026)</div></div></div>
 <div id="toast" role="status"></div>
 <script>
-const DATA = {"xabcde": {"schema": "xabcde-checklist", "version": "2.4", "language": "de-CH", "title": "xABCDE", "subtitle": "Intraoperative Antrittskontrolle in der Anästhesie", "motto": "Wenn die Übergabe endet, beginnt die Übernahme", "author": "Noah Reichle", "source": "Diplomarbeit NDS Anästhesiepflege, Universitätsspital Basel, 2026", "disclaimer": "Konzept aus einer Diplomarbeit, nicht klinisch validiert. Ersetzt keine fachliche Beurteilung.", "privacy": "Keine Personendaten wie Name oder Geburtsdatum in die Bemerkungen eingeben.", "reasons": ["Übernahme (Teamwechsel)", "Lagewechsel / Umlagerung", "Situationswechsel", "Reassessment (regelmässig)"], "calculators": {"blood": {"title": "Blutvolumen & Blutverlust", "item": "C2", "note": "Schätzung mit Richtwerten, bei Adipositas eher zu hoch · Schwangere am Termin rund 100 ml/kg (Richtwert, u. a. MBRRACE-UK), bei Adipositas deutlich weniger pro kg", "hbNote": "Hb und tolerierbarer Blutverlust nach Gross (1983), Annahme: verlorenes Volumen ersetzt · Hb mit ABGA kontrollieren", "source": "Gross, J. B. (1983). Estimating allowable blood loss: Corrected for dilution. Anesthesiology, 58(3), 277–280", "factors": [{"label": "Mann", "mlPerKg": 70}, {"label": "Frau", "mlPerKg": 65}, {"label": "Schwangere am Termin", "mlPerKg": 100}, {"label": "Kind", "mlPerKg": 75}, {"label": "Säugling", "mlPerKg": 80}, {"label": "Neugeborenes", "mlPerKg": 85}]}, "vent": {"title": "Tidalvolumen nach Idealgewicht", "item": "B2", "note": "Erwachsene, Idealgewicht aus Grösse und Geschlecht · Beatmung beidseitig oder Einlungenventilation", "modes": ["beidseitig", "Einlungenventilation"], "mlPerKgOlv": [4, 6], "sexes": ["Mann", "Frau"], "mlPerKg": [6, 8], "startNote": "Start nach Young et al. (2019): 6–8 ml/kg Idealgewicht und PEEP 5 cmH₂O, PEEP danach individuell · Einlungenventilation: 4–6 ml/kg Idealgewicht (Ziel um 5), PEEP ≥ 5 cmH₂O, Expertenkonsens (Colquhoun et al., 2021) · Idealgewicht nach ARDS Network (2000)", "source": "Acute Respiratory Distress Syndrome Network (2000). N Engl J Med, 342(18), 1301–1308 · Young, C. C. et al. (2019). Br J Anaesth, 123(6), 898–913 · Colquhoun, D. A. et al. (2021). Anesthesiology, 134(4), 562–576"}, "base": {"title": "Grunddaten", "note": "Einmal eingeben, die Rechner unter B und C übernehmen die Werte · keine Personendaten"}}, "sections": [{"id": "x", "letter": "x", "title": "Lagebeurteilung", "subtitle": "Xtra · Überblick", "color": "#0E8571", "items": [{"id": "x1", "label": "Gesamteindruck", "hint": "Mit frischem Blick über das Abdecktuch auf Patientin oder Patient und Operationsfeld"}, {"id": "x2", "label": "Lage", "options": ["stabil", "instabil"], "hint": "Auch bei instabiler Lage A bis E der Reihe nach, akuten Handlungsbedarf im zugehörigen Buchstaben sofort umsetzen"}, {"id": "x3", "label": "Handlungsbedarf", "options": ["ja", "nein"], "hint": "Jetzt oder demnächst, z. B. tiefe Relaxierung, Blutdruckziel, bevorstehende Umlagerung · bei stabiler Lage ohne Handlungsbedarf Rundgang um den Operationstisch"}, {"id": "x4", "label": "OP-Phase & nächster Schritt", "hint": "Stand des Eingriffs und nächster Schritt, z. B. Wundverschluss oder Ausleitung · geplantes Vorgehen bekannt, etwa bei schwierigem Atemweg"}]}, {"id": "A", "letter": "A", "title": "Airway", "subtitle": "Kopf-Check", "color": "#E1001A", "items": [{"id": "A1", "label": "Atemwegssicherung", "hint": "Tubus oder Larynxmaske: Lage, beim Tubus Tiefe an der Zahnreihe, Fixierung, Cuffdruck im Zielbereich"}, {"id": "A2", "label": "Schläuche frei", "hint": "Beatmungsschläuche, Filter und CO₂-Messleitung intakt, nicht abgeknickt oder diskonnektiert"}, {"id": "A3", "label": "Augenschutz", "hint": "Augen geschlossen und druckfrei, besonders bei langer Dauer sowie in Bauch-, Seiten- und Kopftieflage"}, {"id": "A4", "label": "Kopflagerung", "hint": "Kopf druckfrei und neutral gelagert, Ohren nicht abgeknickt, kein Druck durch Tubus oder Schläuche im Gesicht"}]}, {"id": "B", "letter": "B", "title": "Breathing", "subtitle": "Beatmung", "color": "#E1001A", "items": [{"id": "B1", "label": "SpO₂ & Kapnographie", "hint": "Sättigung mit guter Pulskurve, Kapnographiekurve vorhanden und typisch, Werte plausibel"}, {"id": "B2", "label": "Beatmungsparameter", "hint": "Modus, Tidalvolumen nach Idealgewicht, Frequenz, PEEP und FiO₂ passend zu Eingriff, Lagerung und OP-Phase, besonders nach Pneumoperitoneum oder Lagewechsel", "calc": "vent"}, {"id": "B3", "label": "Auskultation", "hint": "Seitengleiche Belüftung · Nebengeräusche wie Giemen oder Brummen (obstruktiv), Rasselgeräusche, Stridor (besonders bei Larynxmaske)"}, {"id": "B4", "label": "Alarmgrenzen & Trends", "hint": "Alarmgrenzen für Atemwegsdruck, Minutenvolumen und endtidales CO₂ · Trendkurven für Compliance und Sauerstoffaufnahme, Druck-Volumen-Schleife"}, {"id": "B5", "label": "akut: DOPES · HANDS", "hint": "Nur bei plötzlicher Beatmungsverschlechterung: Ursache suchen und parallel handeln", "link": "DOPES", "optional": true}]}, {"id": "C", "letter": "C", "title": "Circulation", "subtitle": "Kreislauf & Monitoring", "color": "#E1001A", "items": [{"id": "C1", "label": "Hämodynamik & Zielwerte", "hint": "Blutdruckziel klar und eingehalten, Herzfrequenz und Rhythmus, Katecholaminbedarf · Werte plausibel, Druckaufnehmer auf Referenzhöhe (besonders nach Lagewechsel), Manschette frei"}, {"id": "C2", "label": "Blutverlust & Spülmenge", "hint": "Bisherigen Blutverlust abzüglich Spülmenge bilanzieren, zu erwartenden Blutverlust einschätzen · Hb-Ausgangswert und Verlauf (ABGA), Verfügbarkeit von Blutprodukten", "calc": "blood"}, {"id": "C3", "label": "ABGA", "options": ["ja", "nein"], "hint": "Individuell prüfen: bei relevantem oder drohendem Blutverlust, instabilem Kreislauf, Einlungenventilation, langer Beatmung oder langer Dauer · Hb, Laktat, Base Excess, pCO₂, Elektrolyte, Glukose, Verlauf mit Vorwerten vergleichen"}, {"id": "C4", "label": "Zugänge", "hint": "Venös und arteriell: Anzahl, Lage, Grösse in Gauge und Funktion, passend zu Eingriff und Volumenbedarf · Funktion unter der Abdeckung aktiv prüfen"}, {"id": "C5", "label": "Volumenstatus & Diurese", "hint": "Bilanz aus Infusionen und Verlusten, Zeichen von Volumenmangel · Urinausscheidung mit Menge und Farbe, Katheter durchgängig"}, {"id": "C6", "label": "Alarmgrenzen", "hint": "Für Blutdruck, Herzfrequenz und SpO₂ patientenindividuell und eingriffsbezogen eingestellt, Alarme nicht stummgeschaltet"}, {"id": "C7", "label": "Narkosetiefe (BIS)", "hint": "Wert und Verlauf im Zielbereich, Signalqualität gut · besonders bei TIVA mit Relaxierung"}]}, {"id": "D", "letter": "D", "title": "Drugs", "subtitle": "Narkose & Medikation", "color": "#E1001A", "items": [{"id": "D1", "label": "Narkose", "options": ["TIVA", "volatil"], "hint": "Laufende Substanzen für Hypnose und Analgesie, allfällige Regionalanästhesie oder Periduralkatheter"}, {"id": "D2", "label": "Zielkonzentration", "hint": "Passend zu Eingriff und OP-Phase · TIVA: Zielwerte für Hypnotikum und Opioid, Patientendaten im TCI-Modell korrekt · volatil: endtidale Konzentration (MAC), richtiges Alter im Narkosegerät"}, {"id": "D3", "label": "Laufrate & Flow", "hint": "Perfusoren: Rate korrekt, Leitung bis zum Zugang durchgängig · volatil: Frischgasflow, Verdampfer gefüllt"}, {"id": "D4", "label": "Relaxierung", "options": ["ja", "nein"], "hint": "Bei ja: quantitatives neuromuskuläres Monitoring (TOF), Zeitpunkt der letzten Gabe, Nachdosierung und Antagonisierung planen"}, {"id": "D5", "label": "Pupillen", "hint": "Wie im klassischen ABCDE: Weite als Hinweis auf die Analgesie, Seitengleichheit · Seitendifferenz: Druck auf das Auge oder neurologisches Ereignis"}, {"id": "D6", "label": "Reserve & Nachschub", "hint": "Reserve- und Notfallmedikation griffbereit, Nachschub für laufende Perfusoren vorbereitet, besonders vor Lagewechsel oder Ausleitung"}, {"id": "D7", "label": "Antibiotikaprophylaxe", "hint": "Zeitpunkt der letzten Gabe, Wiederholungsdosis je nach Dauer und Blutverlust"}]}, {"id": "E", "letter": "E", "title": "Environment", "subtitle": "Everything else", "color": "#E1001A", "items": [{"id": "E1", "label": "Lagerung & Druckstellen", "hint": "Von Kopf bis Fuss: Auflagepunkte gepolstert, Arme ohne Überstreckung, keine Kabel oder Schläuche unter dem Körper · nach jedem Lagewechsel erneut, besonders in Bauchlage"}, {"id": "E2", "label": "Wärmemanagement", "hint": "Temperatur gemessen, aktive Wärmung läuft, Infusionen bei grossen Mengen gewärmt"}, {"id": "E3", "label": "Arbeitsplatz", "hint": "Zugänge und Geräte frei erreichbar, Leitungen ohne Zug, Knick und Stolperfallen · Beatmungsbeutel, Absaugung und Material griffbereit"}, {"id": "E4", "label": "Verlegungsziel", "hint": "Aufwachraum, Intensivstation oder Bettenstation geklärt, bei Bedarf Platz reserviert"}, {"id": "E5", "label": "Dokumentation", "hint": "Zeitpunkt, Anlass und Befund dokumentiert, bei Übernahme auch der Personalwechsel"}]}], "reassessment": {"title": "Reassessment", "triggers": ["nach jeder Übernahme", "nach Lage- und Situationswechseln", "nach jeder Massnahme", "in regelmässigen Abständen"]}}, "linked": {"DOPES": {"schema": "xabcde-checklist", "version": "2.4", "language": "de-CH", "title": "DOPES · HANDS", "subtitle": "Akutes Beatmungsproblem", "first": "Zuerst: an den Beutel, FiO₂ 1,0", "author": "Noah Reichle", "source": "inhaltlich nach Fandler & Gotthardt (2018) und Notfallguru (2026)", "sections": [{"id": "DOPES-D", "letter": "D", "title": "Dislokation", "subtitle": "Ursache suchen", "color": "#E1001A", "items": [{"id": "DOPES-D1", "label": "Tubus ösophageal, endobronchial oder herausgerutscht?"}]}, {"id": "DOPES-O", "letter": "O", "title": "Obstruktion", "subtitle": "Ursache suchen", "color": "#E1001A", "items": [{"id": "DOPES-O1", "label": "Sekret, Blut, Knick in Tubus oder System?"}]}, {"id": "DOPES-P", "letter": "P", "title": "Patient", "subtitle": "Ursache suchen", "color": "#E1001A", "items": [{"id": "DOPES-P1", "label": "Pneumothorax, Kreislaufversagen, Pressen?"}]}, {"id": "DOPES-E", "letter": "E", "title": "Equipment", "subtitle": "Ursache suchen", "color": "#E1001A", "items": [{"id": "DOPES-E1", "label": "Gerät, Schläuche, O₂-Versorgung, Einstellungen?"}]}, {"id": "DOPES-S", "letter": "S", "title": "Stomach / Sedation", "subtitle": "Ursache suchen", "color": "#E1001A", "items": [{"id": "DOPES-S1", "label": "Magen überbläht? Narkose zu flach?"}]}, {"id": "HANDS-H", "letter": "H", "title": "Hand", "subtitle": "parallel handeln", "color": "#0E8571", "items": [{"id": "HANDS-H1", "label": "Beutel mit FiO₂ 1,0: sehen, hören, fühlen"}]}, {"id": "HANDS-A", "letter": "A", "title": "Absaugen", "subtitle": "parallel handeln", "color": "#0E8571", "items": [{"id": "HANDS-A1", "label": "Tubus durchgängig? Ggf. Magensonde"}]}, {"id": "HANDS-N", "letter": "N", "title": "Neueinstellung", "subtitle": "parallel handeln", "color": "#0E8571", "items": [{"id": "HANDS-N1", "label": "Einstellungen prüfen, Air-Trapping (iPEEP)?"}]}, {"id": "HANDS-D", "letter": "D", "title": "Diagnostik", "subtitle": "parallel handeln", "color": "#0E8571", "items": [{"id": "HANDS-D1", "label": "Thoraxsonographie, ABGA, ggf. Röntgen"}]}, {"id": "HANDS-S", "letter": "S", "title": "Sedierung", "subtitle": "parallel handeln", "color": "#0E8571", "items": [{"id": "HANDS-S1", "label": "Bei Pressen: Sedierungsbolus"}]}]}}};
+const DATA = {"xabcde": {"schema": "xabcde-checklist", "version": "2.6", "language": "de-CH", "title": "xABCDE", "subtitle": "Intraoperative Antrittskontrolle in der Anästhesie", "motto": "Wenn die Übergabe endet, beginnt die Übernahme", "author": "Noah Reichle", "source": "Diplomarbeit NDS Anästhesiepflege, Universitätsspital Basel, 2026", "disclaimer": "Konzept aus einer Diplomarbeit, nicht klinisch validiert. Ersetzt keine fachliche Beurteilung.", "privacy": "Keine Personendaten wie Name oder Geburtsdatum eingeben.", "reasons": ["Übernahme (Teamwechsel)", "Lagewechsel / Umlagerung", "Situationswechsel", "Reassessment (regelmässig)"], "calculators": {"blood": {"title": "Blutvolumen & Blutverlust", "item": "C2", "note": "Richtwerte, bei Adipositas eher zu hoch", "hbNote": "Annahme: Volumen ersetzt · gemessener Hb (BGA in den Grunddaten) geht vor", "source": "Gross, J. B. (1983). Estimating allowable blood loss: Corrected for dilution. Anesthesiology, 58(3), 277–280", "factors": [{"label": "Mann", "mlPerKg": 70}, {"label": "Frau", "mlPerKg": 65}, {"label": "Schwangere am Termin", "mlPerKg": 100}, {"label": "Kind", "mlPerKg": 75}, {"label": "Säugling", "mlPerKg": 80}, {"label": "Neugeborenes", "mlPerKg": 85}]}, "vent": {"title": "Tidalvolumen nach Idealgewicht", "item": "B2", "note": "Erwachsene, Idealgewicht aus Grösse und Geschlecht", "modes": ["beidseitig", "Einlungenventilation"], "mlPerKgOlv": [4, 6], "sexes": ["Mann", "Frau"], "mlPerKg": [6, 8], "startNote": "Start 6–8 ml/kg, PEEP 5 cmH₂O, dann individuell (Young et al., 2019) · Einlungenventilation 4–6 ml/kg, PEEP ≥ 5 cmH₂O (Colquhoun et al., 2021) · Idealgewicht nach ARDS Network (2000)", "source": "Acute Respiratory Distress Syndrome Network (2000). N Engl J Med, 342(18), 1301–1308 · Young, C. C. et al. (2019). Br J Anaesth, 123(6), 898–913 · Colquhoun, D. A. et al. (2021). Anesthesiology, 134(4), 562–576"}, "base": {"title": "Grunddaten", "note": "Einmal eingeben, gilt für B und C · keine Personendaten", "positions": ["Rückenlage", "Rampenlagerung (Ramp)", "Kopftieflage (Trendelenburg)", "Kopfhochlage (Anti-Trendelenburg)", "Steinschnittlage", "Bauchlage", "Seitenlage links", "Seitenlage rechts", "Beach-Chair"], "verfahren": ["Allgemeinanästhesie", "Allgemeinanästhesie mit Regionalverfahren", "Regionalanästhesie", "Monitored Anesthesia Care (MAC)"], "regional": ["Spinalanästhesie", "Periduralanästhesie (PDA)", "Kombinierte Spinal-Epidural-Anästhesie (CSE)", "Interskalenärer Block", "Supraklavikulärer Block", "Infraklavikulärer Block", "Axillärer Block", "Femoralisblock", "Fascia-iliaca-Block", "Adduktorenkanalblock", "Ischiadicusblock (popliteal)", "PENG-Block", "TAP-Block", "Rektusscheidenblock", "Erector-spinae-plane-Block (ESP)", "Paravertebralblock", "Intravenöse Regionalanästhesie (IVRA)"]}}, "sections": [{"id": "x", "letter": "x", "title": "Lagebeurteilung", "subtitle": "Xtra · Überblick", "color": "#0E8571", "items": [{"id": "x1", "label": "Gesamteindruck", "hint": "Rundgang, frischer Blick"}, {"id": "x2", "label": "Lage", "options": ["stabil", "instabil"]}, {"id": "x3", "label": "Handlungsbedarf", "options": ["ja", "nein"]}, {"id": "x4", "label": "OP-Phase & nächster Schritt"}]}, {"id": "A", "letter": "A", "title": "Airway", "subtitle": "Kopf-Check", "color": "#E1001A", "items": [{"id": "A1", "label": "Atemwegssicherung", "hint": "Lage, Tiefe, Fixierung, Cuffdruck"}, {"id": "A2", "label": "Schläuche frei"}, {"id": "A3", "label": "Augenschutz", "hint": "Geschlossen und druckfrei"}, {"id": "A4", "label": "Kopflagerung", "hint": "Neutral, druckfrei, Ohren frei, venöser Abfluss gesichert"}]}, {"id": "B", "letter": "B", "title": "Breathing", "subtitle": "Beatmung", "color": "#E1001A", "items": [{"id": "B1", "label": "SpO₂ & Kapnographie"}, {"id": "B2", "label": "Beatmungsparameter", "hint": "Tidalvolumen nach Idealgewicht, PEEP, FiO₂ passend zu Lagerung und Phase", "calc": "vent"}, {"id": "B3", "label": "Auskultation"}, {"id": "B4", "label": "Alarmgrenzen & Trends", "hint": "Atemwegsdruck, Minutenvolumen, etCO₂ · Trendkurven"}, {"id": "B5", "label": "akut: DOPES · HANDS", "hint": "Bei plötzlicher Verschlechterung", "link": "DOPES", "optional": true}]}, {"id": "C", "letter": "C", "title": "Circulation", "subtitle": "Kreislauf & Monitoring", "color": "#E1001A", "items": [{"id": "C1", "label": "Hämodynamik & Zielwerte", "hint": "Blutdruckziel, Rhythmus · Druckaufnehmer auf Referenzhöhe"}, {"id": "C2", "label": "Blutverlust & Spülmenge", "hint": "Sauger minus Spülung · erwarteter Blutverlust", "calc": "blood"}, {"id": "C3", "label": "BGA", "options": ["ja", "nein"], "hint": "Bei Blutung, Instabilität, Einlungenventilation, langer Dauer · Uhrzeit und Hb in den Grunddaten"}, {"id": "C4", "label": "Zugänge", "hint": "Lage, Grösse, Funktion unter der Abdeckung"}, {"id": "C5", "label": "Volumenstatus & Diurese", "hint": "Bilanz, Urin nach Menge und Farbe"}, {"id": "C6", "label": "Alarmgrenzen", "hint": "Patientenindividuell"}, {"id": "C7", "label": "Narkosetiefe (BIS)", "hint": "Im Zielbereich, Signalqualität gut"}]}, {"id": "D", "letter": "D", "title": "Drugs", "subtitle": "Narkose & Medikation", "color": "#E1001A", "items": [{"id": "D1", "label": "Narkose", "options": ["TIVA", "volatil"]}, {"id": "D2", "label": "Zielkonzentration", "hint": "TIVA: TCI-Daten korrekt · volatil: MAC, Alter im Gerät"}, {"id": "D3", "label": "Laufrate, Flow & Nachschub", "hint": "Nachschub ausreichend für die OP-Dauer"}, {"id": "D4", "label": "Relaxierung", "options": ["ja", "nein"], "hint": "Bei ja: TOF, letzte Gabe, Antagonisierung planen"}, {"id": "D5", "label": "Pupillen", "options": ["isokor", "anisokor"], "sizes": ["eng", "mittel", "weit"]}, {"id": "D6", "label": "Notfallmedikamente", "hint": "Patientenindividuell, griffbereit"}, {"id": "D7", "label": "Antibiotikaprophylaxe", "hint": "Letzte Gabe, Wiederholung nach Stanford-Guideline"}, {"id": "D8", "label": "PONV-Prophylaxe", "options": ["gegeben", "geplant", "nicht nötig"], "hint": "Risiko nach Apfel: weiblich, nicht rauchend, PONV oder Reisekrankheit, Opioide postoperativ"}]}, {"id": "E", "letter": "E", "title": "Environment", "subtitle": "Everything else", "color": "#E1001A", "items": [{"id": "E1", "label": "Lagerung & Druckstellen", "hint": "Gepolstert"}, {"id": "E2", "label": "Wärmemanagement", "hint": "Temperatur, aktive Wärmung"}, {"id": "E3", "label": "Arbeitsplatz", "hint": "Zugänge erreichbar, Absaugung bereit"}, {"id": "E4", "label": "Verlegungsziel", "hint": "IMC, Intensivstation oder Aufwachraum"}, {"id": "E5", "label": "Dokumentation", "hint": "Lagerung, postoperative Verordnungen"}]}], "reassessment": {"title": "Reassessment", "triggers": ["nach jeder Übernahme", "nach Lage- und Situationswechseln", "nach jeder Massnahme", "in regelmässigen Abständen"]}}, "linked": {"DOPES": {"schema": "xabcde-checklist", "version": "2.6", "language": "de-CH", "title": "DOPES · HANDS", "subtitle": "Akutes Beatmungsproblem", "first": "Zuerst: manuelle Beatmung, FiO₂ 1,0", "author": "Noah Reichle", "source": "inhaltlich nach Fandler & Gotthardt (2018) und Notfallguru (2026)", "sections": [{"id": "DOPES-D", "letter": "D", "title": "Dislokation", "subtitle": "Ursache suchen", "color": "#E1001A", "items": [{"id": "DOPES-D1", "label": "Tubus ösophageal, endobronchial oder herausgerutscht?"}]}, {"id": "DOPES-O", "letter": "O", "title": "Obstruktion", "subtitle": "Ursache suchen", "color": "#E1001A", "items": [{"id": "DOPES-O1", "label": "Sekret, Blut, Knick in Tubus oder System?"}]}, {"id": "DOPES-P", "letter": "P", "title": "Patient", "subtitle": "Ursache suchen", "color": "#E1001A", "items": [{"id": "DOPES-P1", "label": "Pneumothorax, Kreislaufversagen, Pressen?"}]}, {"id": "DOPES-E", "letter": "E", "title": "Equipment", "subtitle": "Ursache suchen", "color": "#E1001A", "items": [{"id": "DOPES-E1", "label": "Gerät, Schläuche, O₂-Versorgung, Einstellungen?"}]}, {"id": "DOPES-S", "letter": "S", "title": "Stomach / Sedation", "subtitle": "Ursache suchen", "color": "#E1001A", "items": [{"id": "DOPES-S1", "label": "Magen überbläht? Narkose zu flach?"}]}, {"id": "HANDS-H", "letter": "H", "title": "Hand", "subtitle": "parallel handeln", "color": "#0E8571", "items": [{"id": "HANDS-H1", "label": "Manuelle Beatmung mit FiO₂ 1,0: sehen, hören, fühlen"}]}, {"id": "HANDS-A", "letter": "A", "title": "Absaugen", "subtitle": "parallel handeln", "color": "#0E8571", "items": [{"id": "HANDS-A1", "label": "Tubus durchgängig? Ggf. Magensonde"}]}, {"id": "HANDS-N", "letter": "N", "title": "Neueinstellung", "subtitle": "parallel handeln", "color": "#0E8571", "items": [{"id": "HANDS-N1", "label": "Einstellungen prüfen, Air-Trapping (iPEEP)?"}]}, {"id": "HANDS-D", "letter": "D", "title": "Diagnostik", "subtitle": "parallel handeln", "color": "#0E8571", "items": [{"id": "HANDS-D1", "label": "Thoraxsonographie, BGA, ggf. Röntgen"}]}, {"id": "HANDS-S", "letter": "S", "title": "Sedierung", "subtitle": "parallel handeln", "color": "#0E8571", "items": [{"id": "HANDS-S1", "label": "Bei Pressen: Sedierungsbolus"}]}]}}};
 const CL = DATA.xabcde, DOPES = DATA.linked.DOPES;
 
 const fmtDateTime = d => new Date(d).toLocaleString('de-CH', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
@@ -202,13 +202,13 @@ function toNumber(v) {
 }
 
 /** Legt ein leeres Protokoll an. Bemerkungen und Blutwerte einer vorherigen Kontrolle können übernommen werden. */
-function createProtocol(checklists = [CL, DOPES], reason = 'Übernahme (Teamwechsel)', notes = {}, blood = {}, vent = {}, abga = {}) {
+function createProtocol(checklists = [CL, DOPES], reason = 'Übernahme (Teamwechsel)', notes = {}, blood = {}, vent = {}, abga = {}, base = {}) {
   const list = Array.isArray(checklists) ? checklists : [checklists];
   const items = {};
   for (const c of list) for (const s of c.sections) for (const i of s.items)
-    items[i.id] = i.options ? { checked: false, value: null, at: null } : { checked: false, at: null };
+    items[i.id] = i.options ? { checked: false, value: null, at: null, ...(i.sizes ? { size: null } : {}) } : { checked: false, at: null };
   return { checklist: list[0].title, version: list[0].version, reason,
-           startedAt: new Date().toISOString(), completedAt: null, items, sectionNotes: { ...notes }, blood: { ...blood }, vent: { ...vent }, abga: { ...abga } };
+           startedAt: new Date().toISOString(), completedAt: null, items, sectionNotes: { ...notes }, blood: { ...blood }, vent: { ...vent }, abga: { ...abga }, base: { ...base } };
 }
 
 /** Hakt einen Prüfpunkt ab oder hebt den Haken auf (mit Zeitstempel). */
@@ -217,6 +217,7 @@ function setChecked(protocol, itemId, checked = true) {
   const prev = protocol.items[itemId];
   protocol.items[itemId] = { ...prev, checked, at: checked ? new Date().toISOString() : null };
   if (!checked && 'value' in prev) protocol.items[itemId].value = null;
+  if (!checked && 'size' in prev) protocol.items[itemId].size = null;
   return protocol;
 }
 
@@ -225,7 +226,17 @@ function setValue(protocol, itemId, value, checklist = CL) {
   const item = checklist.sections.flatMap(s => s.items).find(i => i.id === itemId);
   if (!item || !item.options) throw new Error('Kein Auswahlpunkt: ' + itemId);
   if (!item.options.includes(value)) throw new Error('Ungültiger Wert für ' + itemId + ': ' + value);
-  protocol.items[itemId] = { checked: true, value, at: new Date().toISOString() };
+  const prev = protocol.items[itemId] || {};
+  protocol.items[itemId] = { checked: true, value, at: new Date().toISOString(), ...(item.sizes ? { size: prev.size ?? null } : {}) };
+  return protocol;
+}
+
+/** Setzt bei Punkten mit Grössenangabe (Pupillen: eng, mittel, weit) die Grösse, ohne den Punkt abzuhaken. */
+function setSize(protocol, itemId, size, checklist = CL) {
+  const item = checklist.sections.flatMap(s => s.items).find(i => i.id === itemId);
+  if (!item || !item.sizes) throw new Error('Keine Grössenangabe: ' + itemId);
+  if (size && !item.sizes.includes(size)) throw new Error('Ungültige Grösse für ' + itemId + ': ' + size);
+  protocol.items[itemId] = { ...protocol.items[itemId], size: size || null };
   return protocol;
 }
 
@@ -233,6 +244,29 @@ function setValue(protocol, itemId, value, checklist = CL) {
 function setNote(protocol, sectionId, text) {
   protocol.sectionNotes = protocol.sectionNotes || {};
   protocol.sectionNotes[sectionId] = String(text || '').trim();
+  return protocol;
+}
+
+/** Hält Lagerung, Vorerkrankungen (kurze Texte) und geplante OP-Dauer in Minuten fest, z. B. { lagerung: 'Bauchlage', durationMin: 180 }. */
+function setBase(protocol, values = {}, checklist = CL) {
+  const b = { ...(protocol.base || {}) };
+  const VERF = ((checklist.calculators || {}).base || {}).verfahren || [];
+  for (const [k, v] of Object.entries(values)) {
+    if (!['eingriff', 'verfahren', 'regional', 'lagerung', 'vorerkrankungen', 'durationMin'].includes(k)) throw new Error('Unbekanntes Feld: ' + k);
+    if (k === 'verfahren') {
+      if (v && VERF.length && !VERF.includes(v)) throw new Error('Unbekanntes Verfahren: ' + v);
+      b.verfahren = v || '';
+      if (!/Regional/.test(b.verfahren)) b.regional = '';     // Regionalverfahren nur bei RA oder AA mit Regionalverfahren
+      continue;
+    }
+    if (k === 'durationMin') {
+      const n = toNumber(v);
+      if (n !== null && !(Number.isFinite(n) && n >= 0 && n <= 2000)) throw new Error('Ungültige OP-Dauer: ' + v);
+      b.durationMin = n; continue;
+    }
+    b[k] = String(v || '').trim().slice(0, 120);
+  }
+  protocol.base = b;
   return protocol;
 }
 
@@ -288,12 +322,15 @@ function bloodSummary(protocol) {
   const hbAfterExpected = expectedMl !== null && !expectedExceeded ? hbAfterLoss(hbStart, expectedMl, volumeMl) : null;
   const tolerableMl = tolerableBloodLoss(volumeMl, hbStart, hbMin);
   const remainingMl = tolerableMl === null ? null : Math.round((tolerableMl - (lossMl || 0)) / 10) * 10;
+  const a = protocol.abga || {}, hbLast = typeof a.hb === 'number' && a.hb > 0 ? a.hb : null;
+  const fromBgaMl = hbLast !== null ? tolerableBloodLoss(volumeMl, hbLast, hbMin) : null;
   return { volumeMl, fromWeight: volumeMl !== null && !b.volumeManual, weightKg: has('weightKg') ? b.weightKg : null, mlPerKg: b.mlPerKg ?? 70,
            suctionMl: has('suctionMl') ? b.suctionMl : null, irrigationMl: has('irrigationMl') ? b.irrigationMl : null, swabsMl: has('swabsMl') ? b.swabsMl : null,
            lossMl, lossPct: pct(lossMl), implausible: raw !== null && raw < 0, expectedMl, expectedPct: pct(expectedMl), expectedExceeded,
            hbStart, hbMin, hbNow, hbAfterExpected, tolerableMl, remainingMl, limitReached: remainingMl !== null && remainingMl <= 0,
+           hbLast, bgaAt: a.lastAt || null, fromBgaMl, bgaLimitReached: fromBgaMl !== null && fromBgaMl <= 0,
            expectedBelowLimit: hbAfterExpected !== null && hbMin !== null && hbAfterExpected < hbMin,
-           hbUnitCheck: (hbStart !== null && hbStart < 30) || (hbMin !== null && hbMin < 30) };
+           hbUnitCheck: (hbStart !== null && hbStart < 30) || (hbMin !== null && hbMin < 30) || (hbLast !== null && hbLast < 30) };
 }
 
 /** Kurzer Text zu Blutvolumen und Blutverlust für Übergabetext und Ausdruck. */
@@ -359,7 +396,7 @@ function ventText(protocol) {
   return parts.join(' · ');
 }
 
-/** Hält den Zeitpunkt der letzten ABGA fest, als Uhrzeit „HH:MM“ (leer löscht den Eintrag). */
+/** Hält die letzte BGA fest: Uhrzeit „HH:MM“ und gemessener Hb in g/l (leer löscht den Eintrag). */
 function setAbga(protocol, values = {}) {
   const a = { ...(protocol.abga || {}) };
   if ('lastAt' in values) {
@@ -367,26 +404,37 @@ function setAbga(protocol, values = {}) {
     if (t && !/^([01]\d|2[0-3]):[0-5]\d$/.test(t)) throw new Error('Uhrzeit als HH:MM eingeben: ' + t);
     a.lastAt = t || null;
   }
+  if ('hb' in values) {
+    const n = toNumber(values.hb);
+    if (n !== null && !(Number.isFinite(n) && n >= 0)) throw new Error('Ungültiger Hb: ' + values.hb);
+    a.hb = n;
+  }
   protocol.abga = a;
   return protocol;
 }
 
-/** Letzte ABGA mit Minuten seit der Abnahme (liegt die Uhrzeit in der Zukunft, wird der Vortag angenommen). */
+/** Letzte BGA mit Minuten seit der Abnahme (liegt die Uhrzeit in der Zukunft, wird der Vortag angenommen). */
 function abgaSummary(protocol, now = new Date()) {
   const a = protocol.abga || {};
-  if (!a.lastAt) return { lastAt: null, minutesAgo: null };
+  const hb = typeof a.hb === 'number' && a.hb > 0 ? a.hb : null;
+  if (!a.lastAt) return { lastAt: null, minutesAgo: null, hb };
   const [h, m] = a.lastAt.split(':').map(Number);
   const d = new Date(now); d.setHours(h, m, 0, 0);
   if (d > now) d.setDate(d.getDate() - 1);
-  return { lastAt: a.lastAt, minutesAgo: Math.round((now - d) / 60000) };
+  return { lastAt: a.lastAt, minutesAgo: Math.round((now - d) / 60000), hb };
 }
 
-/** Kurzer Text zur letzten ABGA für Anzeige und Übergabetext, z. B. „letzte ABGA 10:45 (vor 35 min)“. */
-function abgaText(protocol, now = new Date()) {
+/** Kurzer Text zur letzten BGA, z. B. „BGA 10:45 (vor 35 min), Hb 98 g/l, bis Grenze noch ca. 600 ml“ (ohne Grenze für die Grunddaten). */
+function abgaText(protocol, now = new Date(), withLimit = true) {
   const s = abgaSummary(protocol, now);
-  if (!s.lastAt) return '';
-  const ago = s.minutesAgo < 60 ? `vor ${s.minutesAgo} min` : `vor ${Math.floor(s.minutesAgo / 60)} h ${s.minutesAgo % 60} min`;
-  return `letzte ABGA ${s.lastAt} (${ago})`;
+  if (!s.lastAt && !s.hb) return '';
+  const ago = s.lastAt ? ` (vor ${s.minutesAgo < 60 ? s.minutesAgo + ' min' : Math.floor(s.minutesAgo / 60) + ' h ' + (s.minutesAgo % 60) + ' min'})` : '';
+  let t = `BGA${s.lastAt ? ' ' + s.lastAt : ''}${ago}${s.hb ? (s.lastAt ? ', ' : ': ') + 'Hb ' + fmtNum(s.hb) + ' g/l' : ''}`;
+  if (withLimit && s.hb) {
+    const b = bloodSummary(protocol);
+    if (b.fromBgaMl !== null) t += b.bgaLimitReached ? ', Hb-Grenze erreicht' : `, bis Grenze noch ca. ${fmtMl(b.fromBgaMl)}`;
+  }
+  return t;
 }
 
 /** Fortschritt gesamt und pro Abschnitt. Optionale Punkte (DOPES · HANDS) zählen nicht. */
@@ -415,21 +463,30 @@ function closeCheck(protocol, checklist = CL) {
   const p = progress(protocol, checklist);
   const choice = {};
   for (const s of checklist.sections) for (const i of s.items)
-    if (i.options && protocol.items[i.id] && protocol.items[i.id].value) choice[i.label] = protocol.items[i.id].value;
+    if (i.options && protocol.items[i.id] && protocol.items[i.id].value) choice[i.label] = protocol.items[i.id].value + (protocol.items[i.id].size ? ', ' + protocol.items[i.id].size : '');
   return { reason: protocol.reason, startedAt: protocol.startedAt, closedAt: new Date().toISOString(),
            done: p.total.done, all: p.total.all, choice, blood: bloodSummary(protocol), vent: ventSummary(protocol), abga: abgaSummary(protocol),
+           lagerung: (protocol.base || {}).lagerung || '',
            open: openItems(protocol, checklist).map(o => o.section + ' ' + o.label) };
 }
 
 /** Erstellt den lesbaren Übergabe- bzw. Dokumentationstext, optional mit Verlauf der Kontrollen. */
 function toHandoffText(protocol, checklist = CL, history = []) {
   const lines = [`Antrittskontrolle xABCDE · ${protocol.reason} · ${fmtDateTime(protocol.startedAt)}`];
+  const base = protocol.base || {}, bl = [], op = [];
+  if (base.eingriff) op.push(`Eingriff: ${base.eingriff}`);
+  if (base.verfahren) op.push(`Verfahren: ${base.verfahren}${base.regional ? ', ' + base.regional : ''}`);
+  if (op.length) lines.push(op.join(' · '));
+  if (base.lagerung) bl.push(`Lagerung: ${base.lagerung}`);
+  if (base.vorerkrankungen) bl.push(`Vorerkrankungen: ${base.vorerkrankungen}`);
+  if (typeof base.durationMin === 'number' && base.durationMin > 0) bl.push(`OP-Dauer geplant: ${fmtNum(base.durationMin)} min`);
+  if (bl.length) lines.push(bl.join(' · '));
   let done = 0, all = 0;
   for (const s of checklist.sections) {
     const ok = [], open = [];
     for (const i of s.items) {
       const st = protocol.items[i.id] || {};
-      const label = i.options ? `${i.label}: ${st.value ?? '–'}` : i.label;
+      const label = i.options ? `${i.label}: ${st.value ?? '–'}${st.size ? ', ' + st.size : ''}` : i.label;
       if (i.optional) { if (st.checked) ok.push(label); continue; }
       (st.checked ? ok : open).push(label);
       all++; if (st.checked) done++;
@@ -446,7 +503,7 @@ function toHandoffText(protocol, checklist = CL, history = []) {
   if (history.length) {
     lines.push('', 'Verlauf der Kontrollen:');
     for (const h of history)
-      lines.push(`${fmtTime(h.closedAt)} ${h.reason}: ${h.done}/${h.all}${h.open.length ? ' · offen: ' + h.open.join(', ') : ' · vollständig'}` +
+      lines.push(`${fmtTime(h.closedAt)} ${h.reason}${h.lagerung ? ' (' + h.lagerung + ')' : ''}: ${h.done}/${h.all}${h.open.length ? ' · offen: ' + h.open.join(', ') : ' · vollständig'}` +
                  (h.blood && h.blood.lossMl !== null ? ` · Blutverlust ${fmtMl(h.blood.lossMl)}${h.blood.lossPct !== null ? ' = ' + h.blood.lossPct + ' %' : ''}${h.blood.hbNow ? ', Hb ca. ' + h.blood.hbNow + ' g/l' : ''}` : ''));
   }
   return lines.join('\n');
@@ -456,14 +513,12 @@ let protocol, history = [];
 const $ = id => document.getElementById(id);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
-const ABGA_ID = (CL.sections.flatMap(s => s.items).find(i => i.label === 'ABGA') || {}).id;
-
 function sectionHTML(s, withNote) {
   const cls = s.id === 'x' ? 'section x' : 'section';
   const items = s.items.map(i => i.options ? `
     <li id="li-${i.id}" class="choice"><span class="txt"><b>${i.label}</b></span>
-      <span class="opts">${i.options.map(o => `<label class="opt"><input type="radio" name="${i.id}" value="${o}" data-id="${i.id}"> ${o}</label>`).join('')}</span>
-      ${i.id === ABGA_ID && withNote ? `<span class="abga"><label class="cf"><span>letzte ABGA um</span><input type="time" data-abga="lastAt" aria-label="Uhrzeit der letzten ABGA"></label><span class="abga-info" data-abgainfo></span></span>` : ''}
+      <span class="opts">${i.options.map(o => `<label class="opt"><input type="radio" name="${i.id}" value="${o}" data-id="${i.id}"> ${o}</label>`).join('')}</span>${i.sizes ? `
+      <span class="opts sizes">${i.sizes.map(z => `<label class="opt"><input type="radio" name="${i.id}-size" value="${z}" data-size="${i.id}"> ${z}</label>`).join('')}</span>` : ''}
       ${i.hint ? `<span class="hint">${i.hint}</span>` : ''}</li>` : `
     <li id="li-${i.id}"><label>
       <input type="checkbox" data-id="${i.id}">
@@ -477,7 +532,7 @@ function sectionHTML(s, withNote) {
       <ul>${items}</ul>
       ${CL.calculators && s.items.some(i => i.calc === 'vent') ? ventCalcHTML(CL.calculators.vent) : ''}
       ${CL.calculators && s.items.some(i => i.calc === 'blood') ? calcHTML(CL.calculators.blood) : ''}
-      ${withNote ? `<input class="note" data-sec="${s.id}" placeholder="Bemerkung (optional, ohne Personendaten)" aria-label="Bemerkung ${s.title}">` : ''}
+      ${withNote ? `<input class="note" data-sec="${s.id}" placeholder="Bemerkung (ohne Personendaten)" aria-label="Bemerkung ${s.title}">` : ''}
     </div></div>`;
 }
 
@@ -506,8 +561,7 @@ function calcHTML(c) {
       ${num('volumeMl', 'Blutvolumen', 'ml')}<span class="mode" id="vol-mode"></span></div>
     <div class="calc-row">${num('suctionMl', 'Sauger', 'ml')}${op('−')}${num('irrigationMl', 'Spülung', 'ml')}${op('+')}${num('swabsMl', 'Tücher', 'ml', 'Blut in Tüchern und Kompressen, geschätzt')}${op('=')}
       <span class="res">Blutverlust netto <b id="out-loss">–</b></span></div>
-    <div class="calc-row">${num('expectedMl', 'Erwarteter Blutverlust', 'ml', 'Einschätzung für den ganzen Eingriff, z. B. aus dem Team-Timeout')}${op('→')}<span class="res"><b id="out-exp">–</b></span></div>
-    <div class="calc-row">${num('hbStart', 'Hb Ausgangswert', 'g/l')}${num('hbMin', 'Hb-Grenze', 'g/l', 'Individuelle Transfusionsgrenze')}</div>
+    <div class="calc-row"><span class="res">Erwarteter Blutverlust (Grunddaten): <b id="out-exp">–</b></span></div>
     <div class="hbout" id="out-hb"></div>
     <div class="calc-note">${c.hbNote}</div>
   </div>`;
@@ -518,24 +572,32 @@ function baseHTML() {
   const b = CL.calculators.blood, v = CL.calculators.vent, base = CL.calculators.base;
   return `<div class="calc" id="calc-base">
     <div class="calc-head"><b>${base.title}</b><span>${base.note}</span></div>
+    <div class="calc-row"><label class="cf wide"><span>Eingriff</span><input type="text" data-base="eingriff" autocomplete="off" placeholder="z. B. Hemikolektomie rechts" aria-label="Eingriff"></label>
+      <label class="cf"><span>Anästhesieverfahren</span><select data-base="verfahren" aria-label="Anästhesieverfahren"><option value="">wählen</option>${base.verfahren.map(x => `<option>${x}</option>`).join('')}</select></label>
+      <label class="cf wide" id="regional-wrap" hidden><span>Regionalverfahren</span><input type="text" list="regionals" data-base="regional" autocomplete="off" placeholder="wählen oder eingeben" aria-label="Regionalverfahren"></label>
+      <datalist id="regionals">${base.regional.map(p => `<option value="${p}">`).join('')}</datalist></div>
     <div class="calc-row">${field('blood', 'weightKg', 'Gewicht', 'kg')}${field('vent', 'heightCm', 'Grösse', 'cm')}
       <label class="cf"><span>Geschlecht</span><select data-vent="sex" aria-label="Geschlecht"><option value="">wählen</option>${v.sexes.map(x => `<option>${x}</option>`).join('')}</select></label>
       <label class="cf"><span>Richtwert Blutvolumen</span><select data-blood="mlPerKg" aria-label="Richtwert Blutvolumen">${b.factors.map(f => `<option value="${f.mlPerKg}">${f.label} · ${f.mlPerKg} ml/kg</option>`).join('')}</select></label>
       <label class="cf"><span>Beatmung</span><select data-vent="olv" aria-label="Beatmung beidseitig oder Einlungenventilation">${v.modes.map(x => `<option value="${x}">${x}</option>`).join('')}</select></label></div>
+    <div class="calc-row"><label class="cf wide"><span>Lagerung</span><input type="text" list="positions" data-base="lagerung" autocomplete="off" placeholder="wählen oder eingeben" aria-label="Aktuelle Lagerung"></label>
+      <label class="cf wide"><span>Vorerkrankungen</span><input type="text" data-base="vorerkrankungen" autocomplete="off" placeholder="z. B. KHK, COPD, PONV" aria-label="Vorerkrankungen"></label>
+      <datalist id="positions">${base.positions.map(p => `<option value="${p}">`).join('')}</datalist></div>
+    <div class="calc-row">${field('base', 'durationMin', 'OP-Dauer geplant', 'min')}${field('blood', 'expectedMl', 'Erwarteter Blutverlust', 'ml', 'Einschätzung für den ganzen Eingriff, z. B. aus dem Team-Timeout')}</div>
     <div class="calc-row">${field('blood', 'hbStart', 'Hb Ausgangswert', 'g/l')}${field('blood', 'hbMin', 'Hb-Grenze', 'g/l', 'Individuelle Transfusionsgrenze')}
-      <label class="cf"><span>letzte ABGA um</span><input type="time" data-abga="lastAt" aria-label="Uhrzeit der letzten ABGA"></label></div>
+      <label class="cf"><span>BGA um</span><input type="time" data-abga="lastAt" aria-label="Uhrzeit der letzten BGA"></label>${field('abga', 'hb', 'Hb (BGA)', 'g/l', 'Gemessener Hb der letzten BGA')}</div>
     <div class="base-out" id="out-base"></div>
   </div>`;
 }
 
-/** Fasst die Grunddaten in einer Zeile zusammen (Blutvolumen, Idealgewicht, Tidalvolumen, letzte ABGA). */
+/** Fasst die Grunddaten in einer Zeile zusammen (Blutvolumen, Tidalvolumen, tolerierbarer Blutverlust, letzte BGA). */
 function updateBase() {
   if (!CL.calculators || !$('out-base')) return;
   const b = bloodSummary(protocol), v = ventSummary(protocol), parts = [];
-  if (b.volumeMl) parts.push(`Blutvolumen ca. <b>${fmtMl(b.volumeMl)}</b>` + (b.fromWeight ? ` (${fmtNum(b.weightKg)} kg × ${b.mlPerKg} ml/kg)` : ''));
-  if (v.pbwKg) parts.push(`Idealgewicht ca. <b>${fmtNum(v.pbwKg)} kg</b>, Tidalvolumen ${v.olv ? 'Einlungenventilation ' : ''}${v.range[0]}–${v.range[1]} ml/kg = <b>${v.vtMinMl}–${fmtMl(v.vtMaxMl)}</b>`);
-  if (b.tolerableMl !== null) parts.push(`tolerierbarer Blutverlust bis Hb ${fmtNum(b.hbMin)} g/l ca. <b>${fmtMl(b.tolerableMl)}</b>`);
-  const a = abgaText(protocol); if (a) parts.push(a);
+  if (b.volumeMl) parts.push(`Blutvolumen <b>${fmtMl(b.volumeMl)}</b>`);
+  if (v.pbwKg) parts.push(`Idealgewicht ${fmtNum(v.pbwKg)} kg, Tidalvolumen${v.olv ? ' Einlungenventilation' : ''} <b>${v.vtMinMl}–${fmtMl(v.vtMaxMl)}</b>`);
+  if (b.tolerableMl !== null) parts.push(`tolerierbar bis Hb ${fmtNum(b.hbMin)} g/l: <b>${fmtMl(b.tolerableMl)}</b>`);
+  const a = abgaText(protocol, new Date(), false); if (a) parts.push(a);
   $('out-base').innerHTML = nb(parts.join(' · '));
 }
 
@@ -544,24 +606,35 @@ function mirror(t, kind) {
   document.querySelectorAll(`[data-${kind}="${t.dataset[kind]}"]`).forEach(f => { if (f !== t) { f.value = t.value; f.classList.toggle('bad', t.classList.contains('bad')); } });
 }
 
-/** Zeigt die letzte ABGA mit Zeitabstand beim Prüfpunkt ABGA und in den Grunddaten an. */
-function updateAbga() {
-  const s = abgaSummary(protocol);
-  const txt = !s.lastAt ? '' : s.minutesAgo >= 240 ? `<span class="warn">letzte ABGA ${s.lastAt}, vor ${Math.floor(s.minutesAgo / 60)} h ${s.minutesAgo % 60} min</span>`
-            : `letzte ABGA <b>${s.lastAt}</b>, ${s.minutesAgo < 60 ? 'vor ' + s.minutesAgo + ' min' : 'vor ' + Math.floor(s.minutesAgo / 60) + ' h ' + (s.minutesAgo % 60) + ' min'}`;
-  document.querySelectorAll('[data-abgainfo]').forEach(e => e.innerHTML = txt);
-  updateBase();
-}
+/** Aktualisiert die Anzeigen, die von der letzten BGA abhängen (Grunddaten-Zeile und Hb im Blutrechner). */
+function updateAbga() { updateCalc(); }
 
 function syncAbga() {
   const a = protocol.abga || {};
-  document.querySelectorAll('[data-abga]').forEach(f => { f.value = a.lastAt || ''; f.classList.remove('bad'); });
+  document.querySelectorAll('[data-abga]').forEach(f => {
+    f.value = f.dataset.abga === 'hb' ? (typeof a.hb === 'number' ? String(a.hb).replace('.', ',') : '') : (a.lastAt || '');
+    f.classList.remove('bad');
+  });
   updateAbga();
 }
 
 function applyAbga(t) {
   try { setAbga(protocol, { [t.dataset.abga]: t.value }); t.classList.remove('bad'); mirror(t, 'abga'); updateAbga(); }
   catch (err) { t.classList.add('bad'); }
+}
+
+/** Zeigt das Feld Regionalverfahren nur bei Regionalanästhesie oder Allgemeinanästhesie mit Regionalverfahren. */
+function toggleRegional() {
+  const w = $('regional-wrap'); if (w) w.hidden = !/Regional/.test((protocol.base || {}).verfahren || '');
+}
+
+function syncBase() {
+  const b = protocol.base || {};
+  document.querySelectorAll('[data-base]').forEach(f => {
+    const v = b[f.dataset.base];
+    f.value = typeof v === 'number' ? String(v).replace('.', ',') : (v || ''); f.classList.remove('bad');
+  });
+  toggleRegional();
 }
 
 const BLOOD_INPUTS = ['weightKg', 'volumeMl', 'suctionMl', 'irrigationMl', 'swabsMl', 'expectedMl', 'hbStart', 'hbMin'];
@@ -576,17 +649,19 @@ function updateCalc() {
   });
   $('vol-mode').textContent = s.volumeMl ? (s.fromWeight ? 'aus Gewicht' : 'direkt eingegeben') : '';
   $('out-loss').innerHTML = s.lossMl === null ? '–' : nb(fmtMl(s.lossMl) + (s.lossPct !== null ? ` · ${s.lossPct} %` : '')) + (s.implausible ? ' <span class="warn">Werte prüfen</span>' : '');
-  $('out-exp').innerHTML = s.expectedMl === null ? '–' : nb(s.expectedPct !== null ? `${s.expectedPct} % des Blutvolumens` : fmtMl(s.expectedMl)) +
+  $('out-exp').innerHTML = s.expectedMl === null ? '–' : nb(fmtMl(s.expectedMl) + (s.expectedPct !== null ? ` = ${s.expectedPct} % des Blutvolumens` : '')) +
     (s.expectedExceeded ? ' <span class="warn">bereits überschritten</span>' : '');
   const hb = [];
+  if (s.hbLast) hb.push(`Gemessen${s.bgaAt ? ' (BGA ' + s.bgaAt + ')' : ''}: <b>${fmtNum(s.hbLast)} g/l</b>` +
+    (s.fromBgaMl !== null ? ' · bis Grenze noch ca. ' + (s.bgaLimitReached ? '<span class="warn">Grenze erreicht</span>' : `<b>${fmtMl(s.fromBgaMl)}</b>`) : ''));
   if (s.hbStart) {
     const now = s.hbNow !== null ? `jetzt ca. <b>${s.hbNow} g/l</b>` : '';
     const exp = s.hbAfterExpected !== null ? `nach erwartetem Blutverlust ca. <b class="${s.expectedBelowLimit ? 'warn' : ''}">${s.hbAfterExpected} g/l</b>` : '';
     if (now || exp) hb.push('Hb rechnerisch: ' + [now, exp].filter(Boolean).join(' · '));
     if (s.tolerableMl !== null) hb.push(`Tolerierbar bis Hb ${fmtNum(s.hbMin)} g/l: ca. ${fmtMl(s.tolerableMl)} · ` +
       (s.limitReached ? '<span class="warn">Hb-Grenze rechnerisch erreicht</span>' : `noch ca. <b>${fmtMl(s.remainingMl)}</b>`));
-    if (s.hbUnitCheck) hb.push('<span class="warn">Hb in g/l eingeben, z. B. 140</span>');
   }
+  if (s.hbUnitCheck) hb.push('<span class="warn">Hb in g/l eingeben, z. B. 140</span>');
   $('out-hb').innerHTML = nb(hb.join('<br>'));
   $('calc').classList.toggle('empty', !bloodEntered());
   updateBase();
@@ -687,6 +762,7 @@ function update() {
     li.classList.toggle('done', st.checked);
     if (st.checked) li.classList.remove('missing');
   });
+  document.querySelectorAll('input[type=radio][data-size]').forEach(rb => { rb.checked = (protocol.items[rb.dataset.size] || {}).size === rb.value; });
   document.querySelectorAll('input[type=radio][data-id]').forEach(rb => {
     const st = protocol.items[rb.dataset.id];
     rb.checked = st.value === rb.value;
@@ -701,19 +777,19 @@ function update() {
 function renderHistory() {
   $('historybox').classList.toggle('open', history.length > 0);
   $('histcount').textContent = history.length ? `${history.length} ${history.length === 1 ? 'Kontrolle' : 'Kontrollen'}` : '';
-  $('history').innerHTML = history.map(h => `<li><b>${fmtTime(h.closedAt)}</b> · ${esc(h.reason)} · ` +
+  $('history').innerHTML = history.map(h => `<li><b>${fmtTime(h.closedAt)}</b> · ${esc(h.reason)}${h.lagerung ? ' (' + esc(h.lagerung) + ')' : ''} · ` +
     (h.open.length ? `<span class="no">${h.done}/${h.all}</span> · offen: ${esc(h.open.join(', '))}` : `<span class="ok">${h.done}/${h.all} vollständig</span>`) +
     (h.blood && h.blood.lossMl !== null ? ` · Blutverlust ${fmtMl(h.blood.lossMl)}${h.blood.lossPct !== null ? ' = ' + h.blood.lossPct + ' %' : ''}${h.blood.hbNow ? ', Hb ca. ' + h.blood.hbNow + ' g/l' : ''}` : '') + '</li>').join('');
 }
 
 function toast(msg) { const t = $('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2600); }
 
-function start(reason, notes, blood, vent, abga) {
-  protocol = createProtocol([CL, DOPES], reason, notes || {}, blood || {}, vent || {}, abga || {});
+function start(reason, notes, blood, vent, abga, base) {
+  protocol = createProtocol([CL, DOPES], reason, notes || {}, blood || {}, vent || {}, abga || {}, base || {});
   if (CL.calculators && protocol.blood.mlPerKg == null) protocol.blood.mlPerKg = CL.calculators.blood.factors[0].mlPerKg;
   $('reason').value = reason;
   document.querySelectorAll('li.missing').forEach(li => li.classList.remove('missing'));
-  syncNotes(); syncCalc(); syncVent(); syncAbga(); update();
+  syncNotes(); syncBase(); syncCalc(); syncVent(); syncAbga(); update();
 }
 
 document.addEventListener('change', e => {
@@ -723,6 +799,8 @@ document.addEventListener('change', e => {
     const list = t.dataset.id.includes('-') ? DOPES : CL;
     setValue(protocol, t.dataset.id, t.value, list); update();
   }
+  if (t.matches('input[type=radio][data-size]')) { setSize(protocol, t.dataset.size, t.value, CL); update(); }
+  if (t.matches('select[data-base]')) { setBase(protocol, { [t.dataset.base]: t.value }, CL); syncBase(); }
   if (t.id === 'reason') { protocol.reason = t.value; update(); }
   if (t.matches('[data-blood]')) applyBlood(t);
   if (t.matches('[data-vent]')) applyVent(t);
@@ -734,6 +812,7 @@ document.addEventListener('input', e => {
   if (t.matches('input[data-blood]')) applyBlood(t);
   if (t.matches('input[data-vent]')) applyVent(t);
   if (t.matches('input[data-abga]')) applyAbga(t);
+  if (t.matches('input[data-base]')) { try { setBase(protocol, { [t.dataset.base]: t.value }, CL); t.classList.remove('bad'); } catch (err) { t.classList.add('bad'); } }
 });
 document.addEventListener('focusout', e => { if (e.target.matches && e.target.matches('input[data-blood]')) setTimeout(updateCalc, 0); });
 document.addEventListener('click', e => {
@@ -758,8 +837,8 @@ $('close').onclick = () => {
   }
   const entry = closeCheck(protocol, CL);
   history.push(entry); renderHistory();
-  start('Reassessment (regelmässig)', protocol.sectionNotes, protocol.blood, protocol.vent, protocol.abga);
-  toast(`Kontrolle um ${fmtTime(entry.closedAt)} gespeichert. Grunddaten, Bemerkungen und Rechnerwerte bleiben stehen, die nächste Kontrolle kann beginnen.`);
+  start('Reassessment (regelmässig)', protocol.sectionNotes, protocol.blood, protocol.vent, protocol.abga, protocol.base);
+  toast(`Kontrolle ${fmtTime(entry.closedAt)} gespeichert · Werte bleiben stehen`);
   window.scrollTo({ top: 0, behavior: 'smooth' });
 };
 $('handoff').onclick = () => {
@@ -781,9 +860,9 @@ $('export').onclick = () => {
 };
 $('print').onclick = () => window.print();
 $('reset').onclick = () => {
-  if (history.length || progress(protocol, CL).total.done || bloodEntered() || ventEntered() || (protocol.abga || {}).lastAt) { if (!confirm('Alle Einträge und den Verlauf löschen?')) return; }
+  if (history.length || progress(protocol, CL).total.done || bloodEntered() || ventEntered() || (protocol.abga || {}).lastAt || (protocol.abga || {}).hb || Object.values(protocol.base || {}).some(v => v !== null && v !== '' && v !== undefined)) { if (!confirm('Alle Einträge und den Verlauf löschen?')) return; }
   history = []; renderHistory(); $('handoffbox').classList.remove('open');
-  start(CL.reasons[0], {}, {}, {}, {});
+  start(CL.reasons[0], {}, {}, {}, {}, {});
 };
 
 render(); start(CL.reasons[0], {}); renderHistory();
